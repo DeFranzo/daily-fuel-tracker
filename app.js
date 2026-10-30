@@ -121,7 +121,15 @@ $('detailsGrid').addEventListener('click', event => {
   form.className = 'entry-form meal-edit-form';
   form.innerHTML = `
     <div class="entry-row">
-      <label>Date<input name="date" type="date" required></label>
+
+<label>
+  Date
+  <span class="date-input-wrapper">
+    <span class="edit-date-display" aria-hidden="true"></span>
+    <input name="date" type="date" required aria-label="Meal date">
+  </span>
+</label>
+
       <label>Meal Type<select name="meal" required>
         ${Object.keys(ORDER).map(type => `<option value="${escapeHTML(type)}">${escapeHTML(type)}</option>`).join('')}
       </select></label>
@@ -140,7 +148,23 @@ $('detailsGrid').addEventListener('click', event => {
     </div>
     <p class="form-feedback" role="status" aria-live="polite"></p>`;
   card.appendChild(form);
-  form.elements.namedItem('date').value = entry.date;
+
+  const editDateInput = form.elements.namedItem('date');
+  const editDateDisplay = form.querySelector('.edit-date-display');
+
+  editDateInput.value = entry.date;
+
+  function updateEditDateDisplay() {
+    editDateDisplay.textContent = editDateInput.value
+      ? formatDate(editDateInput.value)
+      : 'Select date';
+  }
+
+  editDateInput.addEventListener('input', updateEditDateDisplay);
+  editDateInput.addEventListener('change', updateEditDateDisplay);
+
+  updateEditDateDisplay();
+
   form.elements.namedItem('meal').value = entry.meal;
   form.elements.namedItem('calories').value = entry.calories;
   form.elements.namedItem('protein').value = entry.protein;
