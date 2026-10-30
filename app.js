@@ -416,6 +416,23 @@ $('signOutButton').addEventListener('click', async () => {
   }
 });
 
+// Fixed-size increment buttons without restricting manually entered decimals.
+$('mealEntryForm').addEventListener('click', event => {
+  const button = event.target.closest('button[data-adjust][data-for]');
+  if (!button || !$('mealEntryForm').contains(button)) return;
+  const input = $(button.dataset.for);
+  if (!input) return;
+  const increment = Number(button.dataset.adjust);
+  const value = input.value.trim() === '' ? 0 : Number(input.value);
+  if (!Number.isFinite(value) || !Number.isFinite(increment)) return;
+  const minimum = Number(input.min || 0);
+  const maximum = Number(input.max || Number.POSITIVE_INFINITY);
+  const next = Math.min(maximum, Math.max(minimum, Math.round((value + increment) * 100) / 100));
+  input.value = String(next);
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  input.focus({ preventScroll: true });
+});
+
 $('mealEntryForm').addEventListener('submit', async event => {
   event.preventDefault();
   if (!currentUser) return;

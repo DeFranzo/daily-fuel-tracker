@@ -127,8 +127,8 @@
           <label>Meal Type <select id="entryType"><option>Breakfast</option><option selected>Lunch</option><option>Dinner</option><option>Snack</option></select></label>
         </div>
         <div class="entry-row">
-          <label>Calories (kcal) <input id="entryCalories" type="number" min="0" max="15000" step="10" inputmode="numeric" placeholder="e.g. 650" required></label>
-          <label>Protein (g) <input id="entryProtein" type="number" min="0" max="500" step="1" inputmode="decimal" placeholder="e.g. 42" required></label>
+          <label>Calories (kcal) <span class="number-stepper"><input id="entryCalories" type="number" min="0" max="15000" step="any" inputmode="numeric" placeholder="e.g. 650" required><span class="number-stepper-actions"><button type="button" data-adjust="-10" data-for="entryCalories" aria-label="Decrease by 10">−</button><button type="button" data-adjust="10" data-for="entryCalories" aria-label="Increase by 10">+</button></span></span></label>
+          <label>Protein (g) <span class="number-stepper"><input id="entryProtein" type="number" min="0" max="500" step="any" inputmode="decimal" placeholder="e.g. 42" required><span class="number-stepper-actions"><button type="button" data-adjust="-1" data-for="entryProtein" aria-label="Decrease by 1">−</button><button type="button" data-adjust="1" data-for="entryProtein" aria-label="Increase by 1">+</button></span></span></label>
         </div>
         <label>Meal Details <textarea id="entryDescription" rows="6" maxlength="6000" required placeholder="Paste the meal name on the first line, followed by Carb, Protein, and Fiber &amp; Fat breakdowns."></textarea></label>
         <button class="entry-submit" type="submit">Save Meal <span aria-hidden="true">↗</span></button>

@@ -433,3 +433,59 @@ th:last-child { width: 21%; }
     margin-top: 0.2rem;
   }
 }
+
+
+/* Precise numeric input with explicit increments; mobile-first and touch-safe. */
+.number-stepper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-width: 0;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 13px;
+  overflow: hidden;
+}
+.entry-form .number-stepper input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.entry-form .number-stepper input::-webkit-inner-spin-button,
+.entry-form .number-stepper input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.number-stepper:focus-within {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px #2f6b4f1a;
+}
+.number-stepper-actions {
+  display: flex;
+  gap: 1px;
+  align-items: stretch;
+  background: var(--border);
+}
+.number-stepper-actions button {
+  min-width: 44px;
+  min-height: 50px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 0;
+  background: var(--soft);
+  color: var(--green);
+  font-weight: 800;
+  font-size: 1.15rem;
+}
+.number-stepper-actions button:hover { background: var(--light-green); }
+@media (max-width: 360px) {
+  .number-stepper-actions button { min-width: 40px; padding: 0 5px; }
+}
+/* Prevent the old 1.85rem mobile brand override from crowding Account. */
+@media (max-width: 660px) {
+  .brand h1 { font-size: clamp(.9rem, 3vw, 1.05rem); line-height: 1.23; }
+  .brand-logo-image { width: 48px; height: 48px; }
+}
