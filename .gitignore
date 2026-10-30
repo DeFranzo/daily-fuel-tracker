@@ -1,4 +1,18 @@
-schema.sql
-daily_fuel_private_history.json
+
+# Environment and secrets
 .env
 .env.*
+!.env.example
+
+# Backups
+*.bak
+*.backup
+*.bak.*
+*.orig
+*.tmp
+
+# Local private data
+daily_fuel_private_history.json
+
+# Local tooling
+node_modules/

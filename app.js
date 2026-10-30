@@ -280,7 +280,7 @@ async function loadProfile() {
 }
 
 
-async function loadMeals() {
+async function loadMeals(options = {}) {
   if (!currentUser) return;
   try {
     await loadProfile();
@@ -290,6 +290,8 @@ async function loadMeals() {
       .order('date', { ascending: false }).limit(10000);
     if (error) throw error;
     if (!currentUser) return; // Sign-out may have occurred while loading.
+    // Prevent an in-flight background response replacing a currently open editor.
+    if (options?.background && document.querySelector('.meal-edit-form')) return;
     const parsed = (data || []).map(m => ({ ...m, calories: Number(m.calories), protein: Number(m.protein) }));
     if (!validate(parsed)) throw Error('Unexpected nutrition records');
     meals = parsed;
@@ -472,13 +474,22 @@ $('mealEntryForm').addEventListener('submit', async event => {
     user_id: currentUser.id, date, meal, food: lines[0].slice(0, 350),
     breakdown: (lines.length > 1 ? lines.slice(1) : lines).join('\n'), calories, protein
   };
-  const { error } = await supabaseClient.from('meals').insert(item);
-  button.disabled = false;
-  if (error) { alert('Could not save meal: ' + error.message); return; }
-  $('entryCalories').value = ''; $('entryProtein').value = ''; $('entryDescription').value = '';
-  selectedDate = date;
-  await loadMeals();
-  alert('Meal saved!');
+  try {
+    const { error } = await supabaseClient.from('meals').insert(item);
+    if (error) throw error;
+
+    $('entryCalories').value = '';
+    $('entryProtein').value = '';
+    $('entryDescription').value = '';
+    selectedDate = date;
+    await loadMeals();
+    alert('Meal saved!');
+  } catch (error) {
+    console.error('Meal saving failed:', error);
+    alert('Could not save meal: ' + (error?.message || 'Network error. Please try again.'));
+  } finally {
+    button.disabled = false;
+  }
 });
 
 $('importButton').addEventListener('click', async () => {
@@ -574,7 +585,10 @@ async function init() {
         Promise.resolve().then(() => loadMeals());
       }
     });
-    setInterval(() => { if (currentUser) loadMeals(); }, REFRESH_MS);
+    setInterval(() => {
+      if (!currentUser || document.querySelector('.meal-edit-form')) return;
+      loadMeals({ background: true });
+    }, REFRESH_MS);
   } catch (error) { $('authMessage').textContent = error.message; }
 }
 init();
