@@ -1,7 +1,7 @@
 "use strict";
 
 // Private Supabase database. Never put service_role/secret keys in frontend code.
-const DAILY_LIMIT = 1800;
+let DAILY_LIMIT = 1800;
 const REFRESH_MS = 60_000;
 let supabaseClient;
 let currentUser = null;
@@ -42,8 +42,8 @@ function groupDays(data) {
 function renderHero(day) {
   $("heroTitle").textContent = formatDate(day.date);
   $("heroSubtitle").textContent = day.remaining < 0
-    ? `Over the 1,800 kcal target by ${fmt(-day.remaining)} kcal.`
-    : `${fmt(day.remaining)} kcal left within the 1,800 kcal target.`;
+    ? `Over the ${fmt(DAILY_LIMIT)} kcal target by ${fmt(-day.remaining)} kcal.`
+    : `${fmt(day.remaining)} kcal left within the ${fmt(DAILY_LIMIT)} kcal target.`;
   $("caloriesValue").textContent = fmt(day.calories);
   $("remainingValue").textContent = fmt(day.remaining);
   $("remainingText").textContent = day.remaining < 0 ? `Over by ${fmt(-day.remaining)} kcal` : "Within budget";
@@ -54,7 +54,10 @@ function renderHero(day) {
   $("progressPct").textContent = `${percent.toFixed(1)}%`;
   $("progressBar").style.width = `${Math.min(100, percent)}%`;
   $("progressBar").classList.toggle("over", day.remaining < 0);
-  $("progressTrack").setAttribute("aria-valuenow", String(Math.min(DAILY_LIMIT, day.calories)));
+  $("progressTrack").setAttribute(
+    "aria-valuenow",
+    String(Math.max(0, Math.min(DAILY_LIMIT, day.calories)))
+  );
 }
 
 function renderSummary() {
@@ -215,9 +218,48 @@ function render() {
   renderHero(day); renderSummary(); renderTrends("calorieTrend", "calories"); renderTrends("proteinTrend", "protein"); renderMeals(day);
 }
 
+
+
+async function loadProfile() {
+  if (!currentUser || !supabaseClient) return;
+
+  const userId = currentUser.id;
+
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('daily_calorie_limit')
+    .eq('user_id', userId)
+    .single();
+
+  if (error) throw error;
+
+  if (currentUser?.id !== userId) return;
+
+  const limit = Number(data.daily_calorie_limit);
+
+  if (!Number.isInteger(limit) || limit < 500 || limit > 10000) {
+    throw new Error('Invalid daily calorie target.');
+  }
+
+  DAILY_LIMIT = limit;
+
+  $('dailyLimitInput').value = limit;
+  $('headerLimitLabel').textContent =
+    `${fmt(limit)} kcal daily target`;
+  $('trendLimitLabel').textContent =
+    `Daily limit · ${fmt(limit)} kcal`;
+
+  $('progressTrack').setAttribute(
+    'aria-valuemax',
+    String(limit)
+  );
+}
+
+
 async function loadMeals() {
   if (!currentUser) return;
   try {
+    await loadProfile();
     // Owner-scoped query; Supabase Row Level Security enforces ownership as well.
     const { data, error } = await supabaseClient.from('meals')
       .select('id,date,meal,food,breakdown,calories,protein')
@@ -251,18 +293,36 @@ $('prevDay').addEventListener('click', () => { const i = days.findIndex(d => d.d
 $('nextDay').addEventListener('click', () => { const i = days.findIndex(d => d.date === selectedDate); if (i > 0) { selectedDate = days[i - 1].date; render(); } });
 $('dateSelect').addEventListener('change', event => { selectedDate = event.target.value; render(); });
 
+
 function setAuthUI(user) {
   currentUser = user;
+
   $('authPanel').hidden = !!user;
   $('loginForm').hidden = !!user;
   $('signedInTools').hidden = !user;
   $('privateContent').hidden = !user;
+
   $('authStatus').textContent = user ? 'Signed in' : 'Private';
   $('signedInEmail').textContent = user?.email || '';
+
   $('accountMenu').hidden = true;
   $('accountButton').setAttribute('aria-expanded', 'false');
-  if (!user) { meals = []; days = []; selectedDate = null; }
+
+  if (!user) {
+    meals = [];
+    days = [];
+    selectedDate = null;
+    DAILY_LIMIT = 1800;
+
+    $('dailyLimitInput').value = '';
+    $('goalMessage').textContent = '';
+
+    $('headerLimitLabel').textContent = '1,800 kcal daily target';
+    $('trendLimitLabel').textContent = 'Daily limit · 1,800 kcal';
+    $('progressTrack').setAttribute('aria-valuemax', '1800');
+  }
 }
+
 
 $('accountButton').addEventListener('click', () => {
   const menu = $('accountMenu');
@@ -385,6 +445,52 @@ $('importButton').addEventListener('click', async () => {
     await loadMeals();
   } catch (e) { label.textContent = e.message; }
   finally { $('importButton').disabled = false; }
+});
+
+
+$('calorieGoalForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  if (!currentUser || !supabaseClient) return;
+
+  const input = $('dailyLimitInput');
+  const message = $('goalMessage');
+  const button = event.currentTarget.querySelector(
+    'button[type="submit"]'
+  );
+
+  const target = Number(input.value);
+
+  if (!Number.isInteger(target) || target < 500 || target > 10000) {
+    message.textContent = 'Enter a target between 500 and 10,000 kcal.';
+    return;
+  }
+
+  button.disabled = true;
+  message.textContent = 'Saving...';
+
+  try {
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .update({ daily_calorie_limit: target })
+      .eq('user_id', currentUser.id)
+      .select('daily_calorie_limit')
+      .single();
+
+    if (error) throw error;
+
+    DAILY_LIMIT = data.daily_calorie_limit;
+
+    days = groupDays(meals);
+
+    await loadMeals();
+
+    message.textContent = 'Target updated.';
+  } catch (error) {
+    message.textContent = `Could not save: ${error.message}`;
+  } finally {
+    button.disabled = false;
+  }
 });
 
 async function init() {
