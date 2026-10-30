@@ -1,0 +1,4 @@
+schema.sql
+daily_fuel_private_history.json
+.env
+.env.*

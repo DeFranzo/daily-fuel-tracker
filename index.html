@@ -4,21 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f2ea">
-  <title>Daily Fuel · Nutrition Tracker</title>
-  <link rel="icon" type="image/svg+xml" href="assets/logo-vertical.svg">
-  <link rel="apple-touch-icon" href="assets/logo-vertical.svg">
+  <title>Daily Fuel · Calorie & Protein Tracker</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
   <script src="app.js" defer></script>
 </head>
 <body>
   <main class="page">
     <header class="topbar">
       <div class="brand">
-        <img src="assets/logo-vertical.svg" alt="Daily Fuel logo" class="brand-logo-img">
-        <div class="brand-copy">
-          <h1>Daily Fuel</h1>
-          <p>Nutrition Tracker</p>
-        </div>
+        <span class="brand-logo" aria-hidden="true">⌁</span>
+        <div><h1>Calorie &amp; Nutrition Tracker</h1><p>1,800 kcal daily cap</p></div>
       </div>
       <nav class="date-control" aria-label="Choose tracking date">
         <label for="dateSelect">DATE</label>
@@ -32,6 +29,20 @@
       </nav>
     </header>
 
+    <section class="section auth-section" id="authPanel">
+      <div class="section-heading"><h2>Private dashboard</h2><span class="badge" id="authStatus">Not signed in</span></div>
+      <form id="loginForm" class="entry-form">
+        <div class="entry-row"><label>Email <input id="loginEmail" type="email" autocomplete="username" required placeholder="you@example.com"></label>
+          <label>Password <input id="loginPassword" type="password" autocomplete="current-password" required minlength="6"></label></div>
+        <button type="submit" class="entry-submit" id="loginButton">Sign in</button>
+      </form>
+      <div class="auth-utilities" id="signedInTools" hidden>
+        <span id="signedInEmail"></span>
+        <button type="button" id="signOutButton" class="secondary-button">Sign out</button>
+      </div>
+      <p class="auth-message" id="authMessage" role="status"></p>
+    </section>
+    <div id="privateContent" hidden>
     <div id="loadMessage" class="load-message" role="status">Loading nutrition history…</div>
 
     <section class="hero" aria-labelledby="heroTitle">
@@ -57,7 +68,7 @@
     </section>
 
     <section class="section" aria-labelledby="trendsTitle">
-      <div class="section-heading"><h2 id="trendsTitle">Weekly Trends</h2><span class="badge">Daily limit · 1,800 kcal</span></div>
+      <div class="section-heading"><h2 id="trendsTitle">7-day Trends</h2><span class="badge">Daily limit · 1,800 kcal</span></div>
       <div class="trend-grid">
         <article class="trend-panel"><div class="trend-heading"><strong>Calories</strong><span>kcal / day</span></div><div class="trend-bars" id="calorieTrend" aria-label="Calories over seven days"></div></article>
         <article class="trend-panel"><div class="trend-heading"><strong>Protein</strong><span>grams / day</span></div><div class="trend-bars" id="proteinTrend" aria-label="Protein over seven days"></div></article>
@@ -65,60 +76,33 @@
     </section>
 
     <section class="section" aria-labelledby="detailsTitle">
-      <div class="section-heading"><h2 id="detailsTitle">Meal History</h2><span class="badge" id="detailBadge">0 meals</span></div>
+      <div class="section-heading"><h2 id="detailsTitle">Detailed Meal Log</h2><span class="badge" id="detailBadge">0 meals</span></div>
       <div id="detailsGrid" class="detail-grid"></div>
     </section>
 
     <section class="section" aria-labelledby="addTitle">
-      <div class="section-heading">
-        <h2 id="addTitle">Log a Meal</h2>
-      </div>
-    
+      <div class="section-heading"><h2 id="addTitle">Add a Meal</h2></div>
       <form id="mealEntryForm" class="entry-form">
         <div class="entry-row">
-          <label>
-            Date
-            <input id="entryDate" type="date" required>
-          </label>
-    
-          <label>
-            Meal Type
-            <select id="entryType">
-              <option>Breakfast</option>
-              <option selected>Lunch</option>
-              <option>Afternoon</option>
-              <option>Dinner</option>
-              <option>Snack</option>
-            </select>
-          </label>
+          <label>Date <input id="entryDate" type="date" required></label>
+          <label>Meal Type <select id="entryType"><option>Breakfast</option><option selected>Lunch</option><option>Afternoon</option><option>Dinner</option><option>Snack</option></select></label>
         </div>
-    
         <div class="entry-row">
-          <label>
-            Calories (kcal)
-            <input id="entryCalories" type="number" min="0" max="15000" step="1" inputmode="numeric" placeholder="e.g. 650"
-              required>
-          </label>
-    
-          <label>
-            Protein (g)
-            <input id="entryProtein" type="number" min="0" max="500" step="0.1" inputmode="decimal" placeholder="e.g. 42"
-              required>
-          </label>
+          <label>Calories (kcal) <input id="entryCalories" type="number" min="0" max="15000" step="1" inputmode="numeric" placeholder="e.g. 650" required></label>
+          <label>Protein (g) <input id="entryProtein" type="number" min="0" max="500" step="0.1" inputmode="decimal" placeholder="e.g. 42" required></label>
         </div>
-    
-        <label>
-          Meal Details
-          <textarea id="entryDescription" rows="6" maxlength="6000" required
-            placeholder="Paste your meal analysis here. Start with the dish name, followed by Carb, Protein, and Fiber &amp; Fat breakdowns."></textarea>
-        </label>
-    
-        <button class="entry-submit" type="submit">
-          Save Meal
-          <span aria-hidden="true">↗</span>
-        </button>
+        <label>Meal Details <textarea id="entryDescription" rows="6" maxlength="6000" required placeholder="Paste the meal name on the first line, followed by Carb, Protein, and Fiber &amp; Fat breakdowns."></textarea></label>
+        <button class="entry-submit" type="submit">Save Meal <span aria-hidden="true">↗</span></button>
       </form>
     </section>
+    <section class="section import-section" aria-labelledby="importHeading">
+      <div class="section-heading"><h2 id="importHeading">Import existing history</h2></div>
+      <label class="import-label" for="historyFile">Choose your local history JSON file (one-time import)</label>
+      <input type="file" id="historyFile" accept=".json,application/json">
+      <button type="button" id="importButton" class="secondary-button">Import history</button>
+      <p class="auth-message" id="importMessage" role="status"></p>
+    </section>
+    </div>
   </main>
 </body>
 </html>
