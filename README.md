@@ -1,21 +1,51 @@
 # Daily Fuel Tracker
 
-Static GitHub Pages website, with a separate `meals.json` data file.
+A lightweight, responsive nutrition dashboard for tracking daily calorie intake, protein, and meal history.
 
-## Local development
+**Live Website:** https://defranzo.github.io/daily-fuel-tracker/
 
-Open this folder in VS Code and run **Live Server** on `index.html`, or use `python -m http.server 5500` and open http://localhost:5500.
+## Features
 
-Do not open `index.html` directly with `file://`; fetching `meals.json` may be blocked by the browser.
+- Daily calorie tracking with a 1,800 kcal target
+- Protein intake and remaining calorie calculations
+- Interactive daily summary and 7-day trends
+- Detailed meal breakdowns
+- Responsive design for desktop and mobile
+- Automatic data refresh every 60 seconds
 
-## Updating records
+## Tech Stack
 
-Add or edit records in `meals.json` using these fields: `date` (YYYY-MM-DD), `meal`, `food`, `breakdown`, `calories`, `protein`. Use numeric calories/protein and escape newlines as `\n` within JSON strings.
+HTML · CSS · JavaScript · JSON · GitHub Pages
 
-The website recalculates daily totals automatically and checks for updated meals.json every 60 seconds. If a selected date is not the newest, it remains selected during refresh.
+## Project Structure
 
-## Deploy
+```text
+daily-fuel-tracker/
+├── index.html     # Website structure
+├── styles.css     # Styling and responsive layout
+├── app.js         # Dashboard logic and charts
+├── meals.json     # Nutrition records
+└── README.md
+```
 
-Commit the files to the root of the `main` branch of `DeFranzo/daily-fuel-tracker`. GitHub Pages is already configured to publish that branch.
+## Getting Started
 
-Note: GitHub Pages and the repository are public; nutrition records will be visible to others.
+Clone the repository and open it in VS Code:
+
+```bash
+git clone https://github.com/DeFranzo/daily-fuel-tracker.git
+cd daily-fuel-tracker
+code .
+```
+
+Run `index.html` using the **Live Server** extension.
+
+## Updating Data
+
+Edit `meals.json` to add or update meals. Daily totals and charts are calculated automatically.
+
+Push changes to `main` to deploy through GitHub Pages.
+
+---
+
+Built for simple, consistent nutrition tracking.
