@@ -312,3 +312,68 @@ body:has(#loginForm:not([hidden])) .date-control {
     font-size: 0.95rem;
   }
 }
+
+.goal-form {
+  display: grid;
+  gap: 9px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-top: 8px;
+}
+
+.goal-form label {
+  font-size: 0.82rem;
+  font-weight: 750;
+  color: var(--muted);
+}
+
+.goal-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.goal-controls input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  font: inherit;
+}
+
+.goal-controls button {
+  flex-shrink: 0;
+}
+
+#goalMessage {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* Fix meal entry form on mobile */
+@media (max-width: 620px) {
+  #mealEntryForm .entry-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  #mealEntryForm label {
+    min-width: 0;
+  }
+
+  #mealEntryForm input,
+  #mealEntryForm select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  #entryDate {
+    font-size: 16px;
+    min-height: 50px;
+    overflow: hidden;
+  }
+}

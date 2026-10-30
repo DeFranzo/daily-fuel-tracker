@@ -15,7 +15,10 @@
     <header class="topbar">
       <div class="brand">
         <span class="brand-logo" aria-hidden="true">⌁</span>
-        <div><h1>Calorie &amp; Nutrition Tracker</h1><p>1,800 kcal daily cap</p></div>
+        <div>
+          <h1>Calorie &amp; Nutrition Tracker</h1>
+          <p id="headerLimitLabel">1,800 kcal daily target</p>
+        </div>
       </div>
       <nav class="date-control" aria-label="Choose tracking date">
         <label for="dateSelect">DATE</label>
@@ -36,6 +39,16 @@
         <div class="account-menu" id="accountMenu" hidden>
           <span class="account-menu-label">Signed in as</span>
           <span id="signedInEmail" class="account-email"></span>
+          <form id="calorieGoalForm" class="goal-form">
+            <label for="dailyLimitInput">Daily calorie target</label>
+            <div class="goal-controls">
+              <input id="dailyLimitInput" type="number" min="500" max="10000" step="10" required>
+              <button type="submit" class="secondary-button">
+                Save
+              </button>
+            </div>
+            <p id="goalMessage" role="status"></p>
+          </form>
           <button type="button" id="signOutButton" class="secondary-button account-signout">Sign out</button>
         </div>
       </div>
@@ -84,7 +97,9 @@
     </section>
 
     <section class="section" aria-labelledby="trendsTitle">
-      <div class="section-heading"><h2 id="trendsTitle">Weekly Trends</h2><span class="badge">Daily limit · 1,800 kcal</span></div>
+      <div class="section-heading"><h2 id="trendsTitle">Weekly Trends</h2><span class="badge" id="trendLimitLabel">
+        Daily limit · 1,800 kcal
+      </span></div>
       <div class="trend-grid">
         <article class="trend-panel"><div class="trend-heading"><strong>Calories</strong><span>kcal / day</span></div><div class="trend-bars" id="calorieTrend" aria-label="Calories over seven days"></div></article>
         <article class="trend-panel"><div class="trend-heading"><strong>Protein</strong><span>grams / day</span></div><div class="trend-bars" id="proteinTrend" aria-label="Protein over seven days"></div></article>
