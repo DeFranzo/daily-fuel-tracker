@@ -289,6 +289,26 @@ function todayLocal() {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 $('entryDate').value = todayLocal();
+
+function updateEntryDateDisplay() {
+  const value = $('entryDate').value;
+
+  $('entryDateDisplay').textContent =
+    value ? formatDate(value) : 'Select date';
+}
+
+$('entryDate').addEventListener(
+  'change',
+  updateEntryDateDisplay
+);
+
+$('entryDate').addEventListener(
+  'input',
+  updateEntryDateDisplay
+);
+
+updateEntryDateDisplay();
+
 $('prevDay').addEventListener('click', () => { const i = days.findIndex(d => d.date === selectedDate); if (i < days.length - 1) { selectedDate = days[i + 1].date; render(); } });
 $('nextDay').addEventListener('click', () => { const i = days.findIndex(d => d.date === selectedDate); if (i > 0) { selectedDate = days[i - 1].date; render(); } });
 $('dateSelect').addEventListener('change', event => { selectedDate = event.target.value; render(); });

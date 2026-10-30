@@ -115,7 +115,14 @@
       <div class="section-heading"><h2 id="addTitle">Log a Meal</h2></div>
       <form id="mealEntryForm" class="entry-form">
         <div class="entry-row">
-          <label>Date <input id="entryDate" type="date" required></label>
+          <label>
+            Date
+            <span class="date-input-wrapper">
+              <span id="entryDateDisplay" aria-hidden="true"></span>
+              <input id="entryDate" type="date" required aria-label="Meal date">
+            </span>
+          </label>
+
           <label>Meal Type <select id="entryType"><option>Breakfast</option><option selected>Lunch</option><option>Afternoon</option><option>Dinner</option><option>Snack</option></select></label>
         </div>
         <div class="entry-row">
