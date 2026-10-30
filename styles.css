@@ -98,3 +98,15 @@ th:first-child { width: 17%; } th:last-child { width: 21%; }
   .meal-totals strong { font-size: .95rem; }
   .meal-totals span { font-size: .76rem; }
 }
+
+/* Mobile-friendly meal entry */
+.entry-form{display:grid;gap:16px}
+.entry-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.entry-form label{display:grid;gap:7px;color:var(--ink);font-size:.88rem;font-weight:750}
+.entry-form input,.entry-form select,.entry-form textarea{width:100%;min-width:0;border:1px solid var(--border);border-radius:13px;background:#fff;color:var(--ink);padding:13px 14px;font:inherit;font-size:16px;outline:none}
+.entry-form textarea{resize:vertical;min-height:145px;line-height:1.5}
+.entry-form :is(input,select,textarea):focus{border-color:var(--green);box-shadow:0 0 0 3px #2f6b4f1a}
+.entry-submit{display:flex;align-items:center;justify-content:center;gap:10px;min-height:49px;padding:13px 18px;border:0;border-radius:14px;color:#fff;background:var(--green);font-weight:800}
+.entry-submit:hover{background:#23563e}
+.entry-help{margin:0;color:var(--muted);font-size:.83rem;line-height:1.55}
+@media(max-width:560px){.entry-row{gap:10px}.entry-form{gap:13px}}

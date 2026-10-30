@@ -130,3 +130,40 @@ $("nextDay").addEventListener("click",()=>{const i=days.findIndex(d=>d.date===se
 $("dateSelect").addEventListener("change",e=>{selectedDate=e.target.value;render();});
 loadMeals();
 setInterval(loadMeals,REFRESH_MS);
+
+
+// Publishing via authenticated GitHub Issues: no credentials are stored in the website.
+const REPOSITORY = "DeFranzo/daily-fuel-tracker";
+const todayLocal = () => {
+  const d = new Date();
+  const pad = n => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+};
+$("entryDate").value = todayLocal();
+$("mealEntryForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const date = $("entryDate").value;
+  const meal = $("entryType").value;
+  const calories = Number($("entryCalories").value);
+  const protein = Number($("entryProtein").value);
+  const description = $("entryDescription").value.trim();
+  const lines = description.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !lines.length ||
+      !Number.isFinite(calories) || calories < 0 || calories > 15000 ||
+      !Number.isFinite(protein) || protein < 0 || protein > 500) {
+    alert("Vui lòng kiểm tra ngày, calories, protein và mô tả.");
+    return;
+  }
+  const item = {
+    date, meal,
+    food: lines[0].slice(0, 350),
+    breakdown: (lines.length > 1 ? lines.slice(1) : lines).join("\n"),
+    calories, protein
+  };
+  const body = `Submit this issue to add a meal to Daily Fuel.\n\n\`\`\`json\n${JSON.stringify(item, null, 2)}\n\`\`\`\n`;
+  const url = new URL(`https://github.com/${REPOSITORY}/issues/new`);
+  url.searchParams.set("title", `[Meal Log] ${date} ${meal}`);
+  url.searchParams.set("body", body);
+  // Same-window navigation works reliably in iOS Safari and in-app browsers.
+  window.location.assign(url.toString());
+});

@@ -63,6 +63,23 @@
       <div class="section-heading"><h2 id="detailsTitle">Detailed Meal Log</h2><span class="badge" id="detailBadge">0 meals</span></div>
       <div id="detailsGrid" class="detail-grid"></div>
     </section>
+
+    <section class="section" aria-labelledby="addTitle">
+      <div class="section-heading"><h2 id="addTitle">Add a Meal</h2></div>
+      <form id="mealEntryForm" class="entry-form">
+        <div class="entry-row">
+          <label>Date <input id="entryDate" type="date" required></label>
+          <label>Meal <select id="entryType"><option>Breakfast</option><option selected>Lunch</option><option>Afternoon</option><option>Dinner</option><option>Snack</option></select></label>
+        </div>
+        <div class="entry-row">
+          <label>Calories (kcal) <input id="entryCalories" type="number" min="0" max="15000" step="1" inputmode="numeric" placeholder="e.g. 650" required></label>
+          <label>Protein (g) <input id="entryProtein" type="number" min="0" max="500" step="0.1" inputmode="decimal" placeholder="e.g. 42" required></label>
+        </div>
+        <label>Description <textarea id="entryDescription" rows="6" maxlength="6000" required placeholder="Dán nội dung phân tích ở đây. Dòng đầu tiên là tên món, những dòng tiếp theo là Carb / Protein / Fiber &amp; Fat."></textarea></label>
+        <button class="entry-submit" type="submit">Send meal to tracker <span aria-hidden="true">↗</span></button>
+        <p class="entry-help">Bạn sẽ được chuyển sang GitHub để xác nhận gửi. Đăng nhập bằng tài khoản DeFranzo, chọn “Submit new issue”; website sẽ nhận bản ghi sau khi workflow chạy xong. Không lưu ảnh.</p>
+      </form>
+    </section>
   </main>
 </body>
 </html>
