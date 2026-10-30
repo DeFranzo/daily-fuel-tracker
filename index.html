@@ -1,407 +1,68 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f5f2ea">
-<title>Calorie Tracker</title>
-<style>
-:root{
-  --bg:#f6f3ed;
-  --bg-2:#efe9dd;
-  --card:#fffdf9;
-  --card-2:#fbf8f2;
-  --text:#1d2b24;
-  --muted:#6b766f;
-  --border:#e6dfd2;
-  --accent:#2f6b4f;
-  --accent-2:#6ea67b;
-  --accent-soft:#edf6ef;
-  --warning:#b75045;
-  --warning-soft:#fff1ef;
-  --shadow:0 20px 50px rgba(33,41,35,.08);
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:linear-gradient(180deg,var(--bg-2) 0, var(--bg) 220px, var(--bg) 100%);color:var(--text)}
-button,input,select{font:inherit}
-.main{max-width:1160px;margin:0 auto;padding:28px 18px 56px}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:18px}
-.brand{display:flex;align-items:center;gap:14px}
-.logo{width:48px;height:48px;border-radius:16px;background:linear-gradient(145deg,var(--accent),#1f5139);color:#fff;display:grid;place-items:center;font-size:22px;box-shadow:0 8px 18px rgba(47,107,79,.26)}
-.brand h1{font-size:1.1rem;margin:0;letter-spacing:-.02em}
-.brand p{margin:2px 0 0;color:var(--muted);font-size:.92rem}
-.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.select-wrap{display:flex;align-items:center;gap:10px;background:rgba(255,253,249,.82);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.5);padding:10px 14px;border-radius:14px;box-shadow:var(--shadow)}
-.select-wrap label{font-size:.84rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-.select-wrap select{border:none;background:transparent;color:var(--text);font-weight:700;outline:none;min-width:150px}
-.hero{background:linear-gradient(135deg,#234c38 0%, #2f6b4f 58%, #3d8460 100%);color:#fff;border-radius:28px;padding:26px;box-shadow:0 20px 50px rgba(35,76,56,.22);margin-bottom:22px;position:relative;overflow:hidden}
-.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;flex-wrap:wrap;margin-bottom:18px}
-.eyebrow{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;opacity:.82;margin-bottom:10px}
-.hero h2{margin:0;font-size:2.3rem;line-height:1.04;letter-spacing:-.05em}
-.hero p{margin:8px 0 0;color:rgba(255,255,255,.84);font-size:.96rem}
-.date-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.16);padding:11px 14px;border-radius:16px;font-weight:700;backdrop-filter:blur(10px)}
-.metrics{display:grid;grid-template-columns:1.25fr 1fr 1fr 1fr;gap:14px}
-.metric{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.13);border-radius:22px;padding:18px 18px 16px;backdrop-filter:blur(10px)}
-.metric .label{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:rgba(255,255,255,.78);margin-bottom:8px}
-.metric .value{font-size:2.15rem;font-weight:800;letter-spacing:-.05em;line-height:1}
-.metric .unit{font-size:1rem;opacity:.8;margin-left:6px}
-.metric .sub{margin-top:10px;font-size:.9rem;color:rgba(255,255,255,.82)}
-.progress-wrap{margin-top:16px}
-.progress-text{display:flex;justify-content:space-between;gap:10px;font-size:.9rem;color:rgba(255,255,255,.85);margin-bottom:9px}
-.progress{height:10px;background:rgba(255,255,255,.16);border-radius:999px;overflow:hidden}
-.progress > div{height:100%;background:linear-gradient(90deg,#ccf0d6,#f6fbe8);border-radius:999px;transition:width .25s ease}
-.stack{display:grid;gap:22px}
-.section{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
-.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:16px;flex-wrap:wrap}
-.section h3{margin:0;font-size:1.35rem;letter-spacing:-.04em}
-.section p{margin:6px 0 0;color:var(--muted);font-size:.95rem}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:.83rem}
-.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:18px;background:var(--card-2)}
-table{width:100%;border-collapse:collapse;min-width:760px}
-th,td{padding:14px 16px;text-align:left;vertical-align:top}
-th{font-size:.77rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#f6f0e6;position:sticky;top:0;z-index:1}
-tbody tr{border-top:1px solid var(--border)}
-tbody tr:hover td{background:#fcfaf5}
-tr.selected td{background:#f3f8f3 !important}
-tr.avg-row td{font-weight:800;background:#f8f3e8}
-.cell-date button{appearance:none;background:none;border:none;padding:0;color:inherit;font:inherit;font-weight:800;cursor:pointer}
-.cell-date button:hover{color:var(--accent)}
-.pill{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;font-size:.78rem;font-weight:800;white-space:nowrap}
-.pill.ok{background:var(--accent-soft);color:var(--accent)}
-.pill.over{background:var(--warning-soft);color:var(--warning)}
-.detail-grid{display:grid;gap:16px}
-.meal-card{border:1px solid var(--border);border-radius:22px;padding:18px;background:linear-gradient(180deg,#fffdf9,#fbf8f2)}
-.meal-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px}
-.meal-kicker{display:inline-flex;padding:6px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
-.meal-title{margin:0;font-size:1.08rem;line-height:1.38;letter-spacing:-.02em}
-.meal-numbers{text-align:right;min-width:120px}
-.meal-numbers .kcal{font-weight:800;font-size:1.1rem;letter-spacing:-.03em}
-.meal-numbers .protein{margin-top:4px;color:var(--muted);font-size:.92rem;font-weight:700}
-.breakdown-list{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px}
-.breakdown-list li{padding:10px 12px;border-radius:14px;background:#fff;line-height:1.55;color:#44524a;border:1px solid #eee7db}
-.summary-note{font-size:.95rem;color:var(--muted)}
-.empty{padding:18px;border:1px dashed var(--border);border-radius:18px;background:#fffaf2;color:var(--muted)}
-.footer-note{margin-top:14px;color:var(--muted);font-size:.88rem}
-@media (max-width:920px){
-  .metrics{grid-template-columns:1fr 1fr}
-}
-@media (max-width:640px){
-  .main{padding:18px 12px 40px}
-  .topbar{align-items:flex-start;flex-direction:column}
-  .hero{padding:20px}
-  .hero h2{font-size:1.85rem}
-  .metrics{grid-template-columns:1fr}
-  .metric .value{font-size:1.95rem}
-  .section{padding:18px}
-  th,td{padding:12px 12px}
-}
-.day-nav{width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:#fffdf9;color:var(--accent);font-size:24px;line-height:1;display:grid;place-items:center;cursor:pointer}
-.day-nav:hover:not(:disabled){background:var(--accent-soft)}
-.day-nav:disabled{opacity:.35;cursor:not-allowed}
-.trend-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.trend-panel{border:1px solid var(--border);border-radius:18px;padding:18px;background:var(--card-2);min-width:0}
-.trend-heading{display:flex;align-items:center;justify-content:space-between;color:var(--text);font-size:14px;font-weight:800;margin-bottom:18px}
-.trend-heading span:last-child{font-size:12px;color:var(--muted);font-weight:600}
-.trend-bars{height:205px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;align-items:end}
-.trend-col{display:flex;flex-direction:column;align-items:center;gap:7px;height:100%;min-width:0}
-.trend-value{color:var(--text);font-size:11px;font-weight:750;white-space:nowrap;font-variant-numeric:tabular-nums}
-.trend-track{width:100%;flex:1;min-height:0;display:flex;align-items:flex-end;position:relative;justify-content:center}
-.trend-bar{height:0;width:min(100%,44px);min-height:2px;border-radius:9px 9px 3px 3px;background:linear-gradient(180deg,#83ba8b,#367552);transition:height .25s}
-.trend-bar.protein{background:linear-gradient(180deg,#d3ba85,#af8b48)}
-.trend-bar.over{background:linear-gradient(180deg,#e9a398,#bc695d)}
-.trend-bar.empty{background:#e7e1d5;min-height:2px}
-.trend-date{font-size:11px;color:var(--muted);white-space:nowrap}
-.trend-col.selected .trend-date{color:var(--accent);font-weight:850}
-@media(max-width:720px){.trend-grid{grid-template-columns:1fr}.trend-panel{padding:14px}.trend-bars{height:180px}}
-@media(max-width:400px){.select-wrap{gap:6px}.select-wrap select{min-width:112px;max-width:142px}.brand p{font-size:.78rem}}
-
-html,body{width:100%;max-width:100%;overflow-x:hidden}
-.main{width:100%;min-width:0}
-@media(max-width:640px){
-  .topbar{gap:12px}.controls{width:100%}.select-wrap{width:100%;justify-content:space-between}
-  .select-wrap select{min-width:0;max-width:100%;flex:1}
-  .hero{width:100%;max-width:100%;overflow:hidden;border-radius:22px}
-  .metrics,.trend-grid{grid-template-columns:minmax(0,1fr)}
-  .metric{min-width:0}.section{max-width:100%;overflow:hidden}
-  .trend-panel{overflow:hidden;padding:12px}.trend-bars{gap:4px}.trend-value,.trend-date{font-size:10px}
-  .meal-top{display:block}.meal-numbers{text-align:left;margin-top:8px}
-  .brand p{font-size:12px}
-}
-
-/* Layout refinements — consistent spacing and alignment */
-.select-wrap{display:grid;grid-template-columns:auto 38px minmax(145px,auto) 38px;gap:10px;align-items:center;padding:10px 12px}
-.select-wrap label{white-space:nowrap}
-.select-wrap select{appearance:none;-webkit-appearance:none;min-width:0;width:100%;text-align:center;text-align-last:center;padding:0 6px;border:0;background:none;line-height:38px;cursor:pointer}
-.day-nav{width:38px;height:38px;min-width:38px;display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;padding:0}
-.section-head{align-items:center;min-height:64px}
-.section-head>div:first-child{min-width:0;flex:1}
-.section-head .badge{margin-left:auto;align-self:center}
-.table-wrap table{table-layout:fixed;min-width:760px}
-.table-wrap th,.table-wrap td{text-align:center;vertical-align:middle}
-.table-wrap th:first-child,.table-wrap td:first-child{width:17%}
-.table-wrap th:last-child,.table-wrap td:last-child{width:21%}
-.cell-date button{display:inline-block;text-align:center}
-.trend-grid{align-items:stretch;grid-template-columns:repeat(2,minmax(0,1fr))}
-.trend-panel{height:100%;display:flex;flex-direction:column}
-.trend-bars{flex:1;min-height:200px}
-.meal-card{padding:20px}
-.meal-top{display:grid;grid-template-columns:minmax(0,1fr) 140px;gap:20px;align-items:start}
-.meal-top>div:first-child{min-width:0}
-.meal-numbers{min-width:0;text-align:right;white-space:nowrap}
-.meal-title{overflow-wrap:anywhere}
-@media(max-width:720px){
-  .trend-grid{grid-template-columns:minmax(0,1fr)}
-  .trend-panel{min-height:250px}
-  .trend-bars{min-height:180px}
-  .section-head{align-items:flex-start}
-}
-@media(max-width:640px){
-  .select-wrap{grid-template-columns:auto 38px minmax(0,1fr) 38px;gap:8px;width:100%}
-  .select-wrap select{max-width:100%;font-size:15px}
-  .day-nav{width:38px;height:38px}
-  .meal-top{display:grid;grid-template-columns:minmax(0,1fr) 98px;gap:10px}
-  .meal-numbers{text-align:right;margin-top:0;white-space:normal}
-  .meal-numbers .kcal{font-size:1rem}
-  .meal-numbers .protein{font-size:.78rem}
-  .meal-card{padding:16px}
-  .section-head .badge{margin-left:0}
-}
-@media(max-width:350px){
-  .select-wrap{gap:4px;padding:8px}
-  .meal-top{grid-template-columns:minmax(0,1fr)}
-  .meal-numbers{text-align:left}
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2ea">
+  <title>Daily Fuel · Nutrition Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
-<main class="main">
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo">⌁</div>
-      <div>
-        <h1>Calorie & Nutrition Tracker</h1>
-        <p>1,800 kcal daily cap · food-photo estimates</p>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-logo" aria-hidden="true">⌁</span>
+        <div><h1>Calorie &amp; Nutrition Tracker</h1><p>1,800 kcal daily cap</p></div>
       </div>
-    </div>
-    <div class="controls">
-      <div class="select-wrap">
-        <label for="dateSelect">Date</label>
-        <button class="day-nav" id="prevDay" type="button" title="Previous day" aria-label="Previous day">‹</button>
-        <select id="dateSelect"><option value="2026-10-30" selected>30-Oct-2026</option><option value="2026-10-29" >29-Oct-2026</option><option value="2026-10-28" >28-Oct-2026</option><option value="2026-10-27" >27-Oct-2026</option><option value="2026-10-26" >26-Oct-2026</option><option value="2026-10-25" >25-Oct-2026</option><option value="2026-10-24" >24-Oct-2026</option><option value="2026-10-23" >23-Oct-2026</option><option value="2026-10-22" >22-Oct-2026</option><option value="2026-10-21" >21-Oct-2026</option></select>
-        <button class="day-nav" id="nextDay" type="button" title="Next day" aria-label="Next day">›</button>
-      </div>
-    </div>
-  </div>
+      <nav class="date-control" aria-label="Choose tracking date">
+        <label for="dateSelect">DATE</label>
+        <button id="prevDay" class="nav-button" aria-label="Previous date" title="Previous date" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <select id="dateSelect" aria-label="Tracking date"></select>
+        <button id="nextDay" class="nav-button" aria-label="Next date" title="Next date" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </nav>
+    </header>
 
-  <section class="hero">
-    <div class="hero-top">
-      <div>
-        <h2 id="heroTitle">30-Oct-2026</h2>
-        <p id="heroSubtitle">Over the 1,800 kcal target by 148 kcal.</p>
-      </div>
-    </div>
-    <div class="metrics">
-      <div class="metric">
-        <div class="label">Calories eaten</div>
-        <div><span class="value" id="caloriesValue">1,948</span><span class="unit">kcal</span></div>
-        <div class="progress-wrap">
-          <div class="progress-text"><span>Daily progress</span><span id="progressPct">108.2%</span></div>
-          <div class="progress"><div id="progressBar" style="width:100%;background:linear-gradient(90deg,#f1b0a5,#f8d9ca)"></div></div>
-        </div>
-      </div>
-      <div class="metric">
-        <div class="label">Remaining</div>
-        <div><span class="value" id="remainingValue">-148</span><span class="unit">kcal</span></div>
-        <div class="sub" id="remainingText">Over by 148 kcal</div>
-      </div>
-      <div class="metric">
-        <div class="label">Protein</div>
-        <div><span class="value" id="proteinValue">132.4</span><span class="unit">g</span></div>
-        <div class="sub" id="proteinText">Total protein for the day</div>
-      </div>
-      <div class="metric">
-        <div class="label">Meals logged</div>
-        <div><span class="value" id="mealsValue">2</span></div>
-        <div class="sub" id="statusText">Over limit</div>
-      </div>
-    </div>
-  </section>
+    <div id="loadMessage" class="load-message" role="status">Loading nutrition history…</div>
 
-  <div class="stack">
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <h3>Daily Summary</h3>
-          <p>Click any date to sync the intake cards and detailed meal breakdown below.</p>
-        </div>
-        <div class="badge" id="averageBadge">Average · 1,813.3 kcal · 110.5g protein</div>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Total Calories</th>
-              <th>Total Protein</th>
-              <th>Daily Limit</th>
-              <th>Remaining</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="summaryBody"><tr class="selected"><td class="cell-date"><button type="button" data-date="2026-10-30">30-Oct-2026</button></td><td>1,948</td><td>132.4</td><td>1,800</td><td>-148</td><td><span class="pill over">OVER LIMIT ❌</span></td></tr><tr class=""><td class="cell-date"><button type="button" data-date="2026-10-29">29-Oct-2026</button></td><td>1,900</td><td>119</td><td>1,800</td><td>-100</td><td><span class="pill over">OVER LIMIT ❌</span></td></tr><tr class=""><td class="cell-date"><button type="button" data-date="2026-10-28">28-Oct-2026</button></td><td>1,745</td><td>112</td><td>1,800</td><td>55</td><td><span class="pill ok">UNDER LIMIT ✅</span></td></tr><tr class=""><td class="cell-date"><button type="button" data-date="2026-10-27">27-Oct-2026</button></td><td>1,790</td><td>103</td><td>1,800</td><td>10</td><td><span class="pill ok">UNDER LIMIT ✅</span></td></tr><tr class=""><td class="cell-date"><button type="button" data-date="2026-10-26">26-Oct-2026</button></td><td>1,800</td><td>104.5</td><td>1,800</td><td>0</td><td><span class="pill ok">UNDER LIMIT ✅</span></td></tr><tr class=""><td class="cell-date"><button type="button" data-date="2026-10-25">25-Oct-2026</button></td><td>1,715</td><td>102.5</td><td>1,800</td><td>85</td><td><span class="pill ok">UNDER LIMIT ✅</span></td></tr><tr class=""><td class="cell-date"><button type="button" data-date="2026-10-24">24-Oct-2026</button></td><td>1,925</td><td>125</td><td>1,800</td><td>-125</td><td><span class="pill over">OVER LIMIT ❌</span></td></tr><tr class=""><td class="cell-date"><button type="button" data-date="2026-10-23">23-Oct-2026</button></td><td>1,675</td><td>113.5</td><td>1,800</td><td>125</td><td><span class="pill ok">UNDER LIMIT ✅</span></td></tr><tr class=""><td class="cell-date"><button type="button" data-date="2026-10-22">22-Oct-2026</button></td><td>1,800</td><td>106.5</td><td>1,800</td><td>0</td><td><span class="pill ok">UNDER LIMIT ✅</span></td></tr><tr class=""><td class="cell-date"><button type="button" data-date="2026-10-21">21-Oct-2026</button></td><td>1,835</td><td>86.5</td><td>1,800</td><td>-35</td><td><span class="pill over">OVER LIMIT ❌</span></td></tr><tr class="avg-row"><td>Average</td><td>1,813.3</td><td>110.5</td><td>1,800</td><td>-13.3</td><td><span class="pill ok">ON TRACK 🔥</span></td></tr></tbody>
-        </table>
+    <section class="hero" aria-labelledby="heroTitle">
+      <h2 id="heroTitle">Daily intake</h2>
+      <p id="heroSubtitle">Select a date to view your intake.</p>
+      <div class="metrics">
+        <article class="metric"><div class="metric-label">Calories eaten</div><div><strong id="caloriesValue">—</strong><span> kcal</span></div>
+          <div class="progress-copy"><span>Daily progress</span><span id="progressPct">—</span></div>
+          <div class="progress-track" role="progressbar" aria-label="Calorie budget progress" aria-valuemin="0" aria-valuemax="1800" aria-valuenow="0" id="progressTrack"><div id="progressBar"></div></div>
+        </article>
+        <article class="metric"><div class="metric-label">Remaining</div><div><strong id="remainingValue">—</strong><span> kcal</span></div><p id="remainingText">—</p></article>
+        <article class="metric"><div class="metric-label">Protein</div><div><strong id="proteinValue">—</strong><span> g</span></div><p>Total protein for the day</p></article>
+        <article class="metric"><div class="metric-label">Meals logged</div><div><strong id="mealsValue">—</strong></div><p id="statusText">—</p></article>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <h3>7-day Trends</h3>
-          <p>Calories and protein over the seven calendar days ending on the selected date.</p>
-        </div>
-        <div class="badge">Daily limit · 1,800 kcal</div>
-      </div>
+    <section class="section" aria-labelledby="summaryTitle">
+      <div class="section-heading"><h2 id="summaryTitle">Daily Summary</h2><span class="badge" id="averageBadge">Average</span></div>
+      <div class="table-scroller"><table><thead><tr>
+        <th scope="col">Date</th><th scope="col">Total Calories</th><th scope="col">Total Protein</th>
+        <th scope="col">Daily Limit</th><th scope="col">Remaining</th><th scope="col">Status</th>
+      </tr></thead><tbody id="summaryBody"></tbody></table></div>
+    </section>
+
+    <section class="section" aria-labelledby="trendsTitle">
+      <div class="section-heading"><h2 id="trendsTitle">7-day Trends</h2><span class="badge">Daily limit · 1,800 kcal</span></div>
       <div class="trend-grid">
-        <div class="trend-panel">
-          <div class="trend-heading"><span>Calories</span><span>kcal / day</span></div>
-          <div id="calorieTrend" class="trend-bars" aria-label="Calories over seven days"><div class="trend-col"><div class="trend-value">1,925</div><div class="trend-track"><div class="trend-bar over" style="height:91.5%"></div></div><div class="trend-date">24/10</div></div><div class="trend-col"><div class="trend-value">1,715</div><div class="trend-track"><div class="trend-bar " style="height:81.5%"></div></div><div class="trend-date">25/10</div></div><div class="trend-col"><div class="trend-value">1,800</div><div class="trend-track"><div class="trend-bar " style="height:85.6%"></div></div><div class="trend-date">26/10</div></div><div class="trend-col"><div class="trend-value">1,790</div><div class="trend-track"><div class="trend-bar " style="height:85.1%"></div></div><div class="trend-date">27/10</div></div><div class="trend-col"><div class="trend-value">1,745</div><div class="trend-track"><div class="trend-bar " style="height:82.9%"></div></div><div class="trend-date">28/10</div></div><div class="trend-col"><div class="trend-value">1,900</div><div class="trend-track"><div class="trend-bar over" style="height:90.3%"></div></div><div class="trend-date">29/10</div></div><div class="trend-col"><div class="trend-value">1,948</div><div class="trend-track"><div class="trend-bar over" style="height:92.6%"></div></div><div class="trend-date">30/10</div></div></div>
-        </div>
-        <div class="trend-panel">
-          <div class="trend-heading"><span>Protein</span><span>grams / day</span></div>
-          <div id="proteinTrend" class="trend-bars" aria-label="Protein over seven days"><div class="trend-col"><div class="trend-value">125</div><div class="trend-track"><div class="trend-bar protein" style="height:87.4%"></div></div><div class="trend-date">24/10</div></div><div class="trend-col"><div class="trend-value">102.5</div><div class="trend-track"><div class="trend-bar protein" style="height:71.7%"></div></div><div class="trend-date">25/10</div></div><div class="trend-col"><div class="trend-value">104.5</div><div class="trend-track"><div class="trend-bar protein" style="height:73.1%"></div></div><div class="trend-date">26/10</div></div><div class="trend-col"><div class="trend-value">103</div><div class="trend-track"><div class="trend-bar protein" style="height:72.0%"></div></div><div class="trend-date">27/10</div></div><div class="trend-col"><div class="trend-value">112</div><div class="trend-track"><div class="trend-bar protein" style="height:78.3%"></div></div><div class="trend-date">28/10</div></div><div class="trend-col"><div class="trend-value">119</div><div class="trend-track"><div class="trend-bar protein" style="height:83.2%"></div></div><div class="trend-date">29/10</div></div><div class="trend-col"><div class="trend-value">132.4</div><div class="trend-track"><div class="trend-bar protein" style="height:92.6%"></div></div><div class="trend-date">30/10</div></div></div>
-        </div>
+        <article class="trend-panel"><div class="trend-heading"><strong>Calories</strong><span>kcal / day</span></div><div class="trend-bars" id="calorieTrend" aria-label="Calories over seven days"></div></article>
+        <article class="trend-panel"><div class="trend-heading"><strong>Protein</strong><span>grams / day</span></div><div class="trend-bars" id="proteinTrend" aria-label="Protein over seven days"></div></article>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <h3>Detailed Meal Log</h3>
-          <p id="detailSubtitle">Detailed breakdown for 30-Oct-2026.</p>
-        </div>
-        <div class="badge" id="detailBadge">2 meals</div>
-      </div>
-      <div class="detail-grid" id="detailsGrid"><article class="meal-card"><div class="meal-top"><div><div class="meal-kicker">Lunch</div><h4 class="meal-title">Cơm bò miếng Lotteria, 1 trứng chiên, sốt, salad không sốt, 1 miếng gà nướng và 2 miếng cắn gà sốt, canh</h4></div><div class="meal-numbers"><div class="kcal">980 kcal</div><div class="protein">62g protein</div></div></div><ul class="breakdown-list"><li>- Carb: Cơm trắng khoảng 175–180g (230 kcal, 5g P)</li><li>- Pro: Bò miếng Lotteria khoảng 90–100g (240 kcal, 18g P) + 1 trứng chiên (110 kcal, 7g P) + 1 miếng gà nướng (~210 kcal, 23g P) + 2 miếng cắn gà sốt (~95 kcal, 7g P)</li><li>- Fiber &amp; Fat: Salad không sốt, canh loãng và phần sốt dùng kèm (~95 kcal, 2g P)</li></ul></article><article class="meal-card"><div class="meal-top"><div><div class="meal-kicker">Afternoon</div><h4 class="meal-title">Cơm cá hồi áp chảo, trứng chiên, bắp cải/cà rốt luộc, 5 trứng cút, gà sốt teriyaki</h4></div><div class="meal-numbers"><div class="kcal">968 kcal</div><div class="protein">70.4g protein</div></div></div><ul class="breakdown-list"><li>- Carb: Cơm trắng dưới đáy tô khoảng 160g (210 kcal, 4g P)</li><li>- Pro: Cá hồi áp chảo khoảng 120–130g, tính phần ăn được (290 kcal, 29g P) + 1 trứng chiên (110 kcal, 7g P) + 5 trứng cút (70 kcal, 6g P) + gà sốt teriyaki có xương, ước tính phần thịt ăn được (248 kcal, 22.4g P)</li><li>- Fiber &amp; Fat: Bắp cải/cà rốt luộc, dầu chiên và sốt còn bám (40 kcal, 2g P)</li></ul></article></div>
-      <div class="footer-note">This HTML includes your latest nutrition history for offline viewing. Open in Safari for interactive date navigation. When hosted, the site refreshes its meals.json file automatically. Offline copies retain embedded history.</div>
+    <section class="section" aria-labelledby="detailsTitle">
+      <div class="section-heading"><h2 id="detailsTitle">Detailed Meal Log</h2><span class="badge" id="detailBadge">0 meals</span></div>
+      <div id="detailsGrid" class="detail-grid"></div>
     </section>
-  </div>
-</main>
-<script>
-'use strict';
-const DAILY_LIMIT = 1800;
-const FALLBACK_MEALS = [{"date":"2026-10-30","meal":"Lunch","food":"Cơm bò miếng Lotteria, 1 trứng chiên, sốt, salad không sốt, 1 miếng gà nướng và 2 miếng cắn gà sốt, canh","breakdown":"- Carb: Cơm trắng khoảng 175–180g (230 kcal, 5g P)\n- Pro: Bò miếng Lotteria khoảng 90–100g (240 kcal, 18g P) + 1 trứng chiên (110 kcal, 7g P) + 1 miếng gà nướng (~210 kcal, 23g P) + 2 miếng cắn gà sốt (~95 kcal, 7g P)\n- Fiber & Fat: Salad không sốt, canh loãng và phần sốt dùng kèm (~95 kcal, 2g P)","calories":980,"protein":62},{"date":"2026-10-30","meal":"Afternoon","food":"Cơm cá hồi áp chảo, trứng chiên, bắp cải/cà rốt luộc, 5 trứng cút, gà sốt teriyaki","breakdown":"- Carb: Cơm trắng dưới đáy tô khoảng 160g (210 kcal, 4g P)\n- Pro: Cá hồi áp chảo khoảng 120–130g, tính phần ăn được (290 kcal, 29g P) + 1 trứng chiên (110 kcal, 7g P) + 5 trứng cút (70 kcal, 6g P) + gà sốt teriyaki có xương, ước tính phần thịt ăn được (248 kcal, 22.4g P)\n- Fiber & Fat: Bắp cải/cà rốt luộc, dầu chiên và sốt còn bám (40 kcal, 2g P)","calories":968,"protein":70.4},{"date":"2026-10-29","meal":"Lunch","food":"Mì gói bò kho, 1 cây chả, 2 hoành thánh chiên, 1 xíu mại, 5 cục bò nạc nhỏ, không húp nước, rau giá","breakdown":"- Carb: 1 vắt mì gói trụng ~65g khô + lớp vỏ bột của 2 viên hoành thánh chiên (275 kcal, 6.5g P)\n- Pro: 5 cục bò kho nạc nhỏ ~65g + 1 cây chả lụa dài ~55g + 1 viên xíu mại thịt băm ~45g + nhân thịt trong 2 viên hoành thánh (380 kcal, 37g P)\n- Fiber & Fat: Rau giá, cà rốt hầm + dầu chiên thấm trong 2 vỏ hoành thánh & vắt mì + chút váng dầu bò kho bám trên sợi mì, đã bỏ toàn bộ nước (125 kcal, 1.5g P)","calories":780,"protein":45},{"date":"2026-10-29","meal":"Afternoon","food":"1 quả chuối vừa (Pre-workout)","breakdown":"- Carb: 1 quả chuối chín vừa ~100g nạp năng lượng nhanh trước buổi tập (90 kcal, 1g P)","calories":90,"protein":1},{"date":"2026-10-29","meal":"Dinner","food":"Tiệc dê (5 vú heo nướng to, 3 sườn dê nhỏ, 5 dê hấp nhỏ, 5 dê xào lăn nhỏ + 2 miếng bánh mì + 1/3 chén nước, lẩu dê 5 thịt nhỏ + nửa chén phở + 1 chén nước + 2 củ sen + 1 khoai nhỏ, đậu bắp)","breakdown":"- Carb: 2 miếng bánh mì nhỏ chấm xào lăn ~35g + nửa chén bánh phở tươi ~65g + 2 miếng củ sen & 1 miếng khoai nhỏ trong lẩu (215 kcal, 5.5g P)\n- Pro: 5 miếng vú heo nướng bản to ~75g + 3 khúc sườn dê nướng nhỏ ~55g + 5 miếng dê hấp nhỏ ~55g + 5 miếng dê xào lăn nhỏ ~50g + 5 miếng thịt dê lẩu nhỏ ~55g (655 kcal, 63.5g P)\n- Fiber & Fat: 1/3 chén nước sốt dê xào lăn cốt dừa, dầu điều & hành tây + 1 chén nước lẩu dê, chao chấm, đậu bắp nướng & rau tía tô, sả (160 kcal, 4g P)","calories":1030,"protein":73},{"date":"2026-10-28","meal":"Lunch","food":"Bún thịt nướng, chả giò 1 con tôm, nem nướng, 5 trứng cút, ăn 1 miếng tàu hủ","breakdown":"- Carb: Bún tươi lót dưới khay ~170g + nước mắm chua ngọt chan bún + vỏ bánh tráng của cuốn chả giò (265 kcal, 4g P)\n- Pro: Thịt heo nướng thái lát ~85g + 1 miếng nem nướng lớn ~65g + nhân tôm thịt của 1 cuốn chả giò tôm + 5 quả trứng cút luộc + 1 miếng tàu hủ chiên (570 kcal, 50g P)\n- Fiber & Fat: Rau sống, dưa leo, đồ chua lót dưới + đậu phộng rang, hành phi, mỡ hành + lượng dầu chiên thấm trong vỏ cuốn chả giò (115 kcal, 2g P)","calories":950,"protein":56},{"date":"2026-10-28","meal":"Dinner","food":"Cơm cá hồi + trứng chiên, bắp cải luộc, gà sốt teriyaki, chén canh cà chua trứng (nửa trái cà chua, ít trứng)","breakdown":"- Carb: Cơm trắng dưới đáy tô ~160g (205 kcal, 4g P)\n- Pro: Cá hồi áp chảo nguyên da ~90g + 1 trứng chiên lót tô + 1 phần gà sốt Teriyaki ~90g (520 kcal, 48.5g P)\n- Fiber & Fat: Bắp cải luộc lót dưới tô + chén canh cà chua trứng gồm nửa trái cà chua & ít trứng (70 kcal, 3.5g P)","calories":795,"protein":56},{"date":"2026-10-27","meal":"Breakfast & Lunch","food":"Sữa Vinamilk + Tô bánh canh cua (8 miếng càng cua, 2 ba chỉ, 1 huyết, 5 quẩy nhỏ, chả chiên)","breakdown":"- Carb: Sợi bánh canh ~160g + tinh bột năng tạo độ sệt trong nước dùng + phần bột của 5 khoanh quẩy nhỏ (300 kcal, 3.5g P)\n- Pro: 1 hộp sữa Vinamilk + ~8 miếng thịt càng cua + 2 miếng ba chỉ + 1 cục huyết + 1 miếng chả chiên nhỏ (352.7 kcal, 34g P)\n- Fiber & Fat: Dầu thấm trong 5 khoanh quẩy nhỏ + dầu màu điều, mỡ hầm xương trong nước dùng & hành ngò (97.3 kcal, 0.5g P)","calories":750,"protein":38},{"date":"2026-10-27","meal":"Dinner","food":"Cơm cá hồi nguyên da, trứng chiên, sườn nạc rim lớp mỡ mỏng + trứng cút, trứng chiên thịt bằm, đậu bắp luộc, canh bí đao","breakdown":"- Carb: Cơm trắng dưới đáy tô ~160g (205 kcal, 4g P)\n- Pro: Cá hồi áp chảo nguyên da ~90g + 1 trứng chiên lót tô + 1 phần trứng chiên thịt bằm + 2 miếng sườn nạc rim lớp mỡ mỏng & 1 trứng cút (800 kcal, 60g P)\n- Fiber & Fat: Đậu bắp luộc + bí đao vớt từ canh (35 kcal, 1g P)","calories":1040,"protein":65},{"date":"2026-10-26","meal":"Lunch","food":"Cơm sườn cọng chả trứng, bỏ cải chua + chừa 1 ít cơm","breakdown":"- Carb: Cơm tấm chừa lại 1 ít ~170g + nước mắm kẹo & sốt ướp sườn (260 kcal, 4.5g P)\n- Pro: Sườn cọng nướng ~110g thịt lọc xương + 1 miếng chả trứng hấp dày ~80g + 1 quả trứng ốp la lòng đào (540 kcal, 41.5g P)\n- Fiber & Fat: Lớp mỡ hành phủ trên sườn và chả, đã bỏ cải chua (80 kcal, 0.5g P)","calories":880,"protein":46.5},{"date":"2026-10-26","meal":"Afternoon","food":"1 quả chuối vừa (Pre-workout)","breakdown":"- Carb: 1 quả chuối chín vừa ~100g nạp năng lượng nhanh trước buổi tập (90 kcal, 1g P)","calories":90,"protein":1},{"date":"2026-10-26","meal":"Dinner","food":"Cơm cá hồi + trứng chiên, bắp cải luộc, 5 trứng cút, sườn nạc rim","breakdown":"- Carb: Cơm trắng dưới đáy tô ~160g (205 kcal, 4g P)\n- Pro: Cá hồi áp chảo ~90g + 1 trứng chiên + 5 quả trứng cút kho + phần sườn nạc rim nhiều thịt ~90g (600 kcal, 52g P)\n- Fiber & Fat: Bắp cải luộc lót dưới tô (25 kcal, 1g P)","calories":830,"protein":57},{"date":"2026-10-25","meal":"Lunch","food":"Cơm lứt trộn gà + Sandwich trứng (bỏ 2/3 vỏ bánh, ăn hết nhân) + 400g thanh long trắng","breakdown":"- Carb: Cơm gạo lứt dưới đáy tô + 1/3 vỏ bánh mì sandwich, đã bỏ 2/3 bánh (160 kcal, 4.5g P)\n- Pro: Ức gà trộn + nguyên nhân trứng & sốt phết sandwich (570 kcal, 46g P)\n- Fiber & Fat: 400g thanh long ruột trắng + rau xà lách, bắp cải trộn kèm (200 kcal, 4g P)","calories":930,"protein":54.5},{"date":"2026-10-25","meal":"Dinner","food":"Cơm cá hồi + trứng chiên + 3 trứng cút + 4 miếng sườn sụn rim + rau củ luộc & rong biển","breakdown":"- Carb: Cơm trắng dưới đáy tô ~160g (210 kcal, 4g P)\n- Pro: Cá hồi áp chảo ~90g + trứng chiên + 3 trứng cút + 4 miếng sườn sụn rim (540 kcal, 42.5g P)\n- Fiber & Fat: Rau củ luộc bắp cải, đậu bắp, cà rốt + 1 ít rong biển vớt từ canh (35 kcal, 1.5g P)","calories":785,"protein":48},{"date":"2026-10-24","meal":"Lunch","food":"Canh cơm thịt lòng dồi Hàn Quốc (ăn 1/2 cơm, 3 miếng dồi, thịt + lòng, bỏ 1/2 nước)","breakdown":"- Carb: 1/2 chén cơm trắng ~90g + 3 miếng dồi Hàn Quốc nhân miến ~60g (250 kcal, 6g P)\n- Pro: Thịt heo thái lát + lòng heo luộc trong thố ~130g (340 kcal, 28g P)\n- Fiber & Fat: Hành baro, hẹ, tỏi, tép muối + 1/2 tô nước canh hầm xương heo (110 kcal, 5g P)","calories":700,"protein":39},{"date":"2026-10-24","meal":"Dinner","food":"Buffet xiên nướng Izakaya (8 xiên gà, 2 phần ba chỉ cuộn, 1 xúc xích, rau nấm) + 1/2 lon Coca","breakdown":"- Carb: 1/2 lon Coca ~165ml + đường trong lớp sốt nướng Tare (65 kcal, 0g P)\n- Pro: 4 đùi gà + 1 mề + 1 tim + 1 sụn + 1 ba chỉ cuộn trứng cút + 1 heo cuộn măng tây + 1 xúc xích (955 kcal, 80.5g P)\n- Fiber & Fat: Nấm, đậu bắp, cà chua bi, tỏi nướng dầu sốt + 1 xiên da gà nướng (205 kcal, 5.5g P)","calories":1225,"protein":86},{"date":"2026-10-23","meal":"Lunch","food":"Cơm lứt trộn bò + Sandwich gà trứng (bỏ 1/3 vỏ bánh, ăn hết nhân)","breakdown":"- Carb: Cơm gạo lứt dưới đáy tô + 2/3 vỏ bánh mì sandwich, đã bỏ 1/3 bánh (245 kcal, 7g P)\n- Pro: Thịt bò áp chảo ~100g + ức gà xé & 1 quả trứng ốp la nguyên nhân (430 kcal, 52g P)\n- Fiber & Fat: Xà lách, bắp cải tím, ớt chuông + hũ sốt trộn & sốt phết bánh (120 kcal, 3g P)","calories":795,"protein":62},{"date":"2026-10-23","meal":"Dinner","food":"Cơm cá hồi + trứng chiên + 3 miếng sườn kho + 5 trứng cút kho + rau xào + canh cà chua","breakdown":"- Carb: Cơm trắng dưới đáy tô ~170g thấm nước sốt kho (220 kcal, 4.5g P)\n- Pro: Cá hồi áp chảo ~90g + trứng chiên + 3 miếng sườn kho + 5 trứng cút kho (595 kcal, 46g P)\n- Fiber & Fat: Rau củ xào cà rốt + canh cà chua chỉ vớt ăn cái (65 kcal, 1g P)","calories":880,"protein":51.5},{"date":"2026-10-22","meal":"Morning","food":"Xôi gà luộc xé + lòng, trứng non, lạp xưởng + 2/3 chai nước mát","breakdown":"- Carb: Xôi nếp nấu nước luộc gà ~150g + 2/3 chai nước mát ~220ml (410 kcal, 6g P)\n- Pro: Gà luộc xé + lòng mề, trứng non + 2 lát lạp xưởng (270 kcal, 28g P)\n- Fiber & Fat: Đồ chua củ cải, cà rốt + hành phi dầu & mỡ gà (80 kcal, 0g P)","calories":760,"protein":34},{"date":"2026-10-22","meal":"Lunch","food":"Cơm gà Hải Nam (ăn 1/3 cơm) + Canh cà chua nấm rơm thịt bằm tàu hủ (ăn cái, bỏ 1/2 nước)","breakdown":"- Carb: 1/3 hộp cơm nấu nước luộc gà ~65g + nước mắm ớt đường chấm gà (150 kcal, 1.5g P)\n- Pro: Thịt gà luộc chặt miếng ~110g + thịt bằm & tàu hủ trắng trong canh (315 kcal, 33g P)\n- Fiber & Fat: Cà chua, nấm rơm, hành ngò + 1/2 tô nước canh, bỏ 1/2 nước (45 kcal, 1.5g P)","calories":510,"protein":36},{"date":"2026-10-22","meal":"Afternoon","food":"1 quả chuối vừa (Pre-workout Leg Day)","breakdown":"- Carb: 1 quả chuối chín vừa ~100g nạp năng lượng nhanh trước buổi tập (90 kcal, 1g P)","calories":90,"protein":1},{"date":"2026-10-22","meal":"Dinner","food":"Cơm lứt cá hồi sốt Teriyaki (ăn 2/3 cơm) + 5 miếng cá hồi xông khói + 1/3 lon Coca Zero","breakdown":"- Carb: 2/3 phần cơm gạo lứt đen ~80g + sốt Teriyaki (120 kcal, 2.5g P)\n- Pro: Cá hồi sốt Teriyaki ~90g + 5 miếng cá hồi xông khói ~60g (295 kcal, 32g P)\n- Fiber & Fat: Rau cải thảo, bông cải luộc + 1 miếng dưa hấu + 1/3 lon Coca Zero (25 kcal, 1g P)","calories":440,"protein":35.5},{"date":"2026-10-21","meal":"Morning","food":"Cà phê sữa tươi + ít sữa đặc + sương sáo (no extra sugar)","breakdown":"- Carb: Lượng đường từ ~15-20g sữa đặc + sương sáo ngâm nước đường nhẹ (75 kcal, 1.5g P)\n- Pro: Sữa tươi không đường ~120-150ml (90 kcal, 4.2g P)\n- Fiber & Fat: Nền cà phê đen không đường + chất béo trong sữa đặc (25 kcal, 0.3g P)","calories":190,"protein":6},{"date":"2026-10-21","meal":"Lunch","food":"Bánh cuốn nhân thập cẩm (4 cuộn) + 2 chả lụa + 1 chả mực + 1 tôm (bỏ bột) + 1/10 chai sữa sen","breakdown":"- Carb: Vỏ bánh bột gạo của 4 cuộn bánh cuốn + nhân đậu xanh + mắm chấm (330 kcal, 6g P)\n- Pro: Nhân tôm thịt băm + 2 chả lụa + 1 chả mực + 1 tôm bỏ vỏ bột (370 kcal, 28g P)\n- Fiber & Fat: 1/2 hộp rau giá trụng, nấm mèo + hành phi & 1/10 chai sữa hạt sen (35 kcal, 1.5g P)","calories":735,"protein":35.5},{"date":"2026-10-21","meal":"Dinner","food":"Cơm trắng (chừa 1 ít) + 3 cuốn chả giò + Thịt nướng (bỏ đa số mỡ) + Canh cua rau mướp","breakdown":"- Carb: Cơm trắng chừa lại 1 ít ~150g + miến & vỏ bánh tráng trong 3 chả giò (200 kcal, 4g P)\n- Pro: Thịt heo nướng lọc mỡ ~95g + nhân thịt băm trong 3 chả giò + riêu cua (480 kcal, 39g P)\n- Fiber & Fat: Rau đay, mướp nấu canh cua + lượng dầu chiên trong 3 cuốn chả giò (230 kcal, 2g P)","calories":910,"protein":45}];
-let meals = FALLBACK_MEALS;
-const mealOrder = {'Morning':1,'Breakfast':2,'Breakfast & Lunch':3,'Lunch':4,'Afternoon':5,'Snack':6,'Dinner':7};
-const fmtNum = n => Number(n).toLocaleString('en-US',{maximumFractionDigits:1});
-const dateSelect = document.getElementById('dateSelect');
-const summaryBody = document.getElementById('summaryBody');
-const detailsGrid = document.getElementById('detailsGrid');
-const averageBadge = document.getElementById('averageBadge');
-let summaries = [];
-let selectedDate = '2026-10-30';
-const el = id => document.getElementById(id);
-const esc = text => String(text ?? '').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-function formatDate(iso){const [y,m,d]=iso.split('-');const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return `${Number(d)}-${months[Number(m)-1]}-${y}`;}
-function formatShort(iso){const [y,m,d]=iso.split('-');return `${Number(d)}/${Number(m)}`;}
-function parseISO(iso){const [y,m,d]=iso.split('-').map(Number);return new Date(Date.UTC(y,m-1,d));}
-function isoDay(d){return d.toISOString().slice(0,10);}
-function dateDaysBack(iso,n){const date=parseISO(iso);date.setUTCDate(date.getUTCDate()-n);return isoDay(date);}
-function buildSummaries(){
-  const byDate=new Map();
-  for(const m of meals){if(!byDate.has(m.date))byDate.set(m.date,[]);byDate.get(m.date).push(m);}
-  summaries=[...byDate.entries()].map(([date,items])=>{
-    const sorted=items.slice().sort((a,b)=>(mealOrder[a.meal]||99)-(mealOrder[b.meal]||99));
-    const calories=sorted.reduce((s,m)=>s+m.calories,0);
-    const protein=sorted.reduce((s,m)=>s+m.protein,0);
-    return {date,items:sorted,calories,protein,remaining:DAILY_LIMIT-calories};
-  }).sort((a,b)=>b.date.localeCompare(a.date));
-}
-function updateSelect(){
-  const dates=summaries.map(d=>d.date);
-  if(!dates.includes(selectedDate))selectedDate=dates[0];
-  dateSelect.innerHTML=dates.map(d=>`<option value="${esc(d)}">${formatDate(d)}</option>`).join('');
-  dateSelect.value=selectedDate;
-  const pos=dates.indexOf(selectedDate);
-  el('prevDay').disabled=pos===dates.length-1;
-  el('nextDay').disabled=pos<=0;
-}
-function changeDate(iso){selectedDate=iso;render();}
-function renderHero(day){
-  el('heroTitle').textContent=formatDate(day.date);
-  el('heroSubtitle').textContent=day.remaining<0?`Over the 1,800 kcal target by ${fmtNum(-day.remaining)} kcal.`:`${fmtNum(day.remaining)} kcal left within the 1,800 kcal target.`;
-  el('caloriesValue').textContent=fmtNum(day.calories);
-  el('remainingValue').textContent=fmtNum(day.remaining);
-  el('proteinValue').textContent=fmtNum(day.protein);
-  el('mealsValue').textContent=day.items.length;
-  el('remainingText').textContent=day.remaining<0?`Over by ${fmtNum(-day.remaining)} kcal`:'Within budget';
-  el('proteinText').textContent='Total protein for the day';
-  el('statusText').textContent=day.remaining<0?'Over limit':'Under limit';
-  const percentage=Math.max(0,Math.min(100,day.calories/DAILY_LIMIT*100));
-  el('progressPct').textContent=`${(day.calories/DAILY_LIMIT*100).toFixed(1)}%`;
-  el('progressBar').style.width=`${percentage}%`;
-  el('progressBar').style.background=day.remaining<0?'linear-gradient(90deg,#f1b0a5,#f8d9ca)':'';
-}
-function renderSummary(){
-  const avgCal=summaries.reduce((s,d)=>s+d.calories,0)/summaries.length;
-  const avgProtein=summaries.reduce((s,d)=>s+d.protein,0)/summaries.length;
-  const avgRemaining=DAILY_LIMIT-avgCal;
-  averageBadge.textContent=`Average · ${fmtNum(avgCal)} kcal · ${fmtNum(avgProtein)}g protein`;
-  summaryBody.innerHTML=summaries.map(d=>`<tr class="${d.date===selectedDate?'selected':''}">
-    <td class="cell-date"><button type="button" data-date="${esc(d.date)}">${formatDate(d.date)}</button></td>
-    <td>${fmtNum(d.calories)}</td><td>${fmtNum(d.protein)}</td><td>${fmtNum(DAILY_LIMIT)}</td><td>${fmtNum(d.remaining)}</td>
-    <td><span class="pill ${d.remaining<0?'over':'ok'}">${d.remaining<0?'OVER LIMIT ❌':'UNDER LIMIT ✅'}</span></td></tr>`).join('')+
-   `<tr class="avg-row"><td>Average</td><td>${fmtNum(avgCal)}</td><td>${fmtNum(avgProtein)}</td><td>${fmtNum(DAILY_LIMIT)}</td><td>${fmtNum(avgRemaining)}</td><td><span class="pill ${avgRemaining<0?'over':'ok'}">${avgRemaining<0?'OVER LIMIT':'ON TRACK 🔥'}</span></td></tr>`;
-  summaryBody.querySelectorAll('button[data-date]').forEach(b=>b.addEventListener('click',()=>{changeDate(b.dataset.date);window.scrollTo({top:0,behavior:'smooth'});}));
-}
-function renderDetails(day){
-  el('detailSubtitle').textContent=`Detailed breakdown for ${formatDate(day.date)}.`;
-  el('detailBadge').textContent=`${day.items.length} meal${day.items.length===1?'':'s'}`;
-  detailsGrid.innerHTML=day.items.map(m=>`<article class="meal-card"><div class="meal-top"><div><div class="meal-kicker">${esc(m.meal)}</div><h4 class="meal-title">${esc(m.food)}</h4></div><div class="meal-numbers"><div class="kcal">${fmtNum(m.calories)} kcal</div><div class="protein">${fmtNum(m.protein)}g protein</div></div></div>
-  <ul class="breakdown-list">${m.breakdown.split(/\n+/).filter(s=>s.trim()).map(line=>`<li>${esc(line.trim())}</li>`).join('')}</ul></article>`).join('');
-}
-function renderTrend(targetId,kind){
-  const dict=new Map(summaries.map(s=>[s.date,s]));
-  const days=Array.from({length:7},(_,i)=>dateDaysBack(selectedDate,6-i));
-  const values=days.map(d=>dict.get(d)?.[kind] ?? null);
-  const max=kind==='calories'?Math.max(DAILY_LIMIT, ...values.filter(x=>x!==null))*1.08:Math.max(100,...values.filter(x=>x!==null))*1.08;
-  el(targetId).innerHTML=days.map((d,i)=>{
-    const n=values[i];const height=n===null?0:Math.min(100,n/max*100);
-    const label=n===null?'—':fmtNum(n);
-    const over=kind==='calories'&&n>DAILY_LIMIT;
-    return `<div class="trend-col ${d===selectedDate?'selected':''}" title="${esc(formatDate(d))}: ${label} ${kind==='calories'?'kcal':'g protein'}"><div class="trend-value">${label}</div><div class="trend-track"><div class="trend-bar ${kind==='protein'?'protein':''} ${over?'over':''} ${n===null?'empty':''}" style="height:${height}%"></div></div><div class="trend-date">${formatShort(d)}</div></div>`;
-  }).join('');
-}
-function render(){
-  if(!summaries.length)return;
-  updateSelect();
-  const day=summaries.find(d=>d.date===selectedDate)||summaries[0];
-  renderHero(day);renderTrend('calorieTrend','calories');renderTrend('proteinTrend','protein');renderSummary();renderDetails(day);
-}
-function validateMeals(value){
-  if(!Array.isArray(value)||value.length>10000)return false;
-  return value.every(m=>m&&typeof m.date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(m.date)&&
-    typeof m.meal==='string'&&typeof m.food==='string'&&typeof m.breakdown==='string'&&
-    typeof m.calories==='number'&&Number.isFinite(m.calories)&&m.calories>=0&&
-    typeof m.protein==='number'&&Number.isFinite(m.protein)&&m.protein>=0);
-}
-async function syncFromHostedFile(){
-  if(location.protocol==='file:')return;
-  try{
-    const url=new URL('meals.json',window.location.href);
-    const response=await fetch(url,{cache:'no-store'});
-    if(!response.ok)throw new Error('Remote data unavailable');
-    const loaded=await response.json();
-    if(!validateMeals(loaded))throw new Error('Invalid remote meals');
-    const before=JSON.stringify(meals);
-    if(before!==JSON.stringify(loaded)){meals=loaded;buildSummaries();render();}
-  }catch(e){console.info('Using embedded meal history; remote sync unavailable:',e.message);}
-}
-el('prevDay').addEventListener('click',()=>{const pos=summaries.findIndex(s=>s.date===selectedDate);if(pos<summaries.length-1)changeDate(summaries[pos+1].date);});
-el('nextDay').addEventListener('click',()=>{const pos=summaries.findIndex(s=>s.date===selectedDate);if(pos>0)changeDate(summaries[pos-1].date);});
-dateSelect.addEventListener('change',e=>changeDate(e.target.value));
-buildSummaries();render();syncFromHostedFile();setInterval(syncFromHostedFile,60000);
-</script>
+  </main>
 </body>
 </html>
