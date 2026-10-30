@@ -239,3 +239,76 @@ th:first-child { width: 17%; } th:last-child { width: 21%; }
 body:has(#loginForm:not([hidden])) .date-control {
   display: none;
 }
+
+/* Mobile header layout */
+@media (max-width: 720px) {
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px 10px;
+  }
+
+  .topbar .brand {
+    grid-column: 1;
+    grid-row: 1;
+    width: auto;
+    min-width: 0;
+    padding-right: 0;
+    margin: 0;
+    gap: 10px;
+  }
+
+  .brand-logo {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+  }
+
+  .brand h1 {
+    font-size: 0.95rem;
+    line-height: 1.25;
+    overflow-wrap: normal;
+  }
+
+  .brand p {
+    font-size: 0.78rem;
+  }
+
+  .topbar .account-control {
+    position: relative;
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+    justify-self: end;
+  }
+
+  .account-button {
+    min-width: 0;
+    padding: 10px;
+    gap: 5px;
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  .account-button svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .topbar>.date-control {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    grid-template-columns: auto 42px minmax(0, 1fr) 42px;
+    gap: 8px;
+  }
+
+  .date-control select {
+    min-width: 0;
+    font-size: 0.95rem;
+  }
+}
