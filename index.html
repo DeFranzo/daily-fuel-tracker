@@ -27,10 +27,22 @@
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
         </button>
       </nav>
+      <div class="account-control" id="signedInTools" hidden>
+        <button type="button" id="accountButton" class="account-button" aria-expanded="false" aria-controls="accountMenu" aria-haspopup="true">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg>
+          Account
+          <svg class="account-caret" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="account-menu" id="accountMenu" hidden>
+          <span class="account-menu-label">Signed in as</span>
+          <span id="signedInEmail" class="account-email"></span>
+          <button type="button" id="signOutButton" class="secondary-button account-signout">Sign out</button>
+        </div>
+      </div>
     </header>
 
     <section class="section auth-section" id="authPanel">
-      <div class="section-heading"><h2>Private dashboard</h2><span class="badge" id="authStatus">Not signed in</span></div>
+      <div class="section-heading"><h2>Sign in</h2><span class="badge" id="authStatus">Private</span></div>
       <form id="loginForm" class="entry-form login-form" novalidate>
         <div class="login-fields">
           <label for="loginEmail">Email address
@@ -44,10 +56,6 @@
         </div>
         <button type="submit" class="entry-submit" id="loginButton">Sign in</button>
       </form>
-      <div class="auth-utilities" id="signedInTools" hidden>
-        <span id="signedInEmail"></span>
-        <button type="button" id="signOutButton" class="secondary-button">Sign out</button>
-      </div>
       <p class="auth-message" id="authMessage" role="status"></p>
     </section>
     <div id="privateContent" hidden>
@@ -105,11 +113,10 @@
     </section>
     <details class="section import-section" id="historyImportPanel">
       <summary class="import-toggle">
-        <span class="import-title">Import History <span class="import-optional">Optional · one-time setup</span></span>
+        <span class="import-title">Import History (Optional)</span>
         <svg class="import-chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
       </summary>
       <div class="import-content">
-        <p class="import-hint">Already imported your meals? You can leave this closed.</p>
         <label class="import-label" for="historyFile">Choose a JSON backup</label>
         <div class="import-controls">
           <input type="file" id="historyFile" accept=".json,application/json">
