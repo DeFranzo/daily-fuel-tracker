@@ -31,9 +31,17 @@
 
     <section class="section auth-section" id="authPanel">
       <div class="section-heading"><h2>Private dashboard</h2><span class="badge" id="authStatus">Not signed in</span></div>
-      <form id="loginForm" class="entry-form">
-        <div class="entry-row"><label>Email <input id="loginEmail" type="email" autocomplete="username" required placeholder="you@example.com"></label>
-          <label>Password <input id="loginPassword" type="password" autocomplete="current-password" required minlength="6"></label></div>
+      <form id="loginForm" class="entry-form login-form" novalidate>
+        <div class="login-fields">
+          <label for="loginEmail">Email address
+            <input id="loginEmail" type="email" autocomplete="username" required placeholder="you@example.com" aria-describedby="emailError">
+            <span class="field-error" id="emailError"></span>
+          </label>
+          <label for="loginPassword">Password
+            <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Enter your password" aria-describedby="passwordError">
+            <span class="field-error" id="passwordError"></span>
+          </label>
+        </div>
         <button type="submit" class="entry-submit" id="loginButton">Sign in</button>
       </form>
       <div class="auth-utilities" id="signedInTools" hidden>
@@ -68,7 +76,7 @@
     </section>
 
     <section class="section" aria-labelledby="trendsTitle">
-      <div class="section-heading"><h2 id="trendsTitle">7-day Trends</h2><span class="badge">Daily limit · 1,800 kcal</span></div>
+      <div class="section-heading"><h2 id="trendsTitle">Weekly Trends</h2><span class="badge">Daily limit · 1,800 kcal</span></div>
       <div class="trend-grid">
         <article class="trend-panel"><div class="trend-heading"><strong>Calories</strong><span>kcal / day</span></div><div class="trend-bars" id="calorieTrend" aria-label="Calories over seven days"></div></article>
         <article class="trend-panel"><div class="trend-heading"><strong>Protein</strong><span>grams / day</span></div><div class="trend-bars" id="proteinTrend" aria-label="Protein over seven days"></div></article>
@@ -76,12 +84,12 @@
     </section>
 
     <section class="section" aria-labelledby="detailsTitle">
-      <div class="section-heading"><h2 id="detailsTitle">Detailed Meal Log</h2><span class="badge" id="detailBadge">0 meals</span></div>
+      <div class="section-heading"><h2 id="detailsTitle">Meal History</h2><span class="badge" id="detailBadge">0 meals</span></div>
       <div id="detailsGrid" class="detail-grid"></div>
     </section>
 
     <section class="section" aria-labelledby="addTitle">
-      <div class="section-heading"><h2 id="addTitle">Add a Meal</h2></div>
+      <div class="section-heading"><h2 id="addTitle">Log a Meal</h2></div>
       <form id="mealEntryForm" class="entry-form">
         <div class="entry-row">
           <label>Date <input id="entryDate" type="date" required></label>
@@ -95,13 +103,21 @@
         <button class="entry-submit" type="submit">Save Meal <span aria-hidden="true">↗</span></button>
       </form>
     </section>
-    <section class="section import-section" aria-labelledby="importHeading">
-      <div class="section-heading"><h2 id="importHeading">Import existing history</h2></div>
-      <label class="import-label" for="historyFile">Choose your local history JSON file (one-time import)</label>
-      <input type="file" id="historyFile" accept=".json,application/json">
-      <button type="button" id="importButton" class="secondary-button">Import history</button>
-      <p class="auth-message" id="importMessage" role="status"></p>
-    </section>
+    <details class="section import-section" id="historyImportPanel">
+      <summary class="import-toggle">
+        <span class="import-title">Import History <span class="import-optional">Optional · one-time setup</span></span>
+        <svg class="import-chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </summary>
+      <div class="import-content">
+        <p class="import-hint">Already imported your meals? You can leave this closed.</p>
+        <label class="import-label" for="historyFile">Choose a JSON backup</label>
+        <div class="import-controls">
+          <input type="file" id="historyFile" accept=".json,application/json">
+          <button type="button" id="importButton" class="secondary-button">Import History</button>
+        </div>
+        <p class="auth-message" id="importMessage" role="status"></p>
+      </div>
+    </details>
     </div>
   </main>
 </body>

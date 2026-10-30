@@ -124,3 +124,49 @@ th:first-child { width: 17%; } th:last-child { width: 21%; }
 #importButton{margin-top:14px}
 #historyFile{max-width:100%}
 #privateContent{display:grid;gap:22px}
+
+/* Editable meal details */
+.meal-actions { display:flex; justify-content:flex-end; margin-top:14px; padding-top:13px; border-top:1px solid var(--border); }
+.edit-meal { border:1px solid var(--border); background:var(--light-green); color:var(--green); border-radius:11px; padding:9px 16px; font-size:.85rem; font-weight:750; }
+.edit-meal:hover { background:#deeee2; }
+.meal-edit-form { margin-top:18px; padding:20px; border:1px solid var(--border); border-radius:17px; background:var(--surface); }
+.edit-controls {display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap}
+.edit-controls .entry-submit {min-width:145px}
+.form-feedback {margin:0;color:var(--red);font-size:.88rem}
+
+/* One-time JSON import lives in a compact disclosure instead of a large empty form. */
+.import-section { padding:0; overflow:hidden; }
+.import-toggle { list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:12px; padding:20px 23px; }
+.import-toggle::-webkit-details-marker { display:none; }
+.import-toggle::marker { content:''; }
+.import-toggle:focus-visible { outline:3px solid var(--green); outline-offset:-4px; border-radius:24px; }
+.import-title { color:var(--ink); font-size:1.12rem; font-weight:800; letter-spacing:-.025em; }
+.import-optional { font-size:.77rem; margin-left:8px; font-weight:650; color:var(--muted); letter-spacing:0; }
+.import-chevron { flex-shrink:0; fill:none; stroke:var(--green); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .2s ease; }
+.import-section[open] .import-chevron { transform:rotate(180deg); }
+.import-content { padding:0 23px 23px; border-top:1px solid var(--border); }
+.import-hint { color:var(--muted); margin:17px 0 18px; font-size:.88rem; }
+.import-label { margin-bottom:10px; font-weight:750; color:var(--ink); }
+.import-controls { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+.import-controls input[type=file] { min-width:0; flex:1 1 230px; padding:12px; background:var(--soft); border:1px solid var(--border); border-radius:12px; color:var(--muted); font:inherit; font-size:.85rem; }
+.import-controls .secondary-button { white-space:nowrap; }
+#importButton { margin-top:0; }
+@media(max-width:560px) { .import-toggle { padding:18px; } .import-content { padding:0 18px 18px; } .import-optional { display:block; margin:3px 0 0; } .import-controls .secondary-button { width:100%; } }
+
+/* Focused login layout */
+.auth-section { max-width:760px; width:100%; margin-inline:auto; }
+.login-form { gap:18px; }
+.login-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; align-items:start; }
+.login-form label { display:flex; flex-direction:column; gap:9px; font-size:.9rem; }
+.login-form input { min-height:50px; }
+.login-form .entry-submit { width:100%; }
+.field-error { display:block; color:var(--red); font-size:.81rem; font-weight:550; min-height:0; }
+.field-error:empty {display:none}
+.login-form input[aria-invalid="true"] {border-color:var(--red);box-shadow:0 0 0 3px #b750451c}
+.auth-section .auth-message {margin:12px 0 0; min-height:1.3em}
+@media(max-width:620px) {
+  .login-fields {grid-template-columns:1fr;gap:14px}
+  .meal-edit-form {padding:14px}
+  .meal-edit-form .entry-row {grid-template-columns:1fr}
+  .edit-controls .entry-submit,.edit-controls .secondary-button {flex:1}
+}
