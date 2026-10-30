@@ -1,0 +1,10 @@
+<svg width="96" height="120" viewBox="0 0 96 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="12" y="8" width="72" height="72" rx="22" fill="#2F6B4F"></rect>
+  <path d="M52 20L40 42H50L43 68L58 44H48L52 20Z" fill="white"></path>
+  <text x="48" y="100" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#1D2B24">
+    Daily Fuel
+  </text>
+  <text x="48" y="116" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="500" fill="#68786D">
+    Nutrition Tracker
+  </text>
+</svg>
