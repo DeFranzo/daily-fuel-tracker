@@ -1,17 +1,52 @@
-# Daily Fuel — Private Supabase Edition
+# Daily Fuel
 
-Live frontend: https://defranzo.github.io/daily-fuel-tracker/
+A lightweight, responsive calorie and protein tracker with private, account-based nutrition tracking.
 
-## Setup
-1. Create a Supabase project. Under **Authentication > Users**, add your own email/password account. Disable public signup under Authentication settings.
-2. Copy your Auth user UUID and replace `YOUR_AUTH_USER_UUID` in `schema.sql`. Run this file using **SQL Editor**.
-3. In **Project Settings / Connect**, copy the Project URL and **publishable key** (or legacy `anon` key) into `supabase-config.js`. NEVER use `service_role` or secret API keys in the browser.
-4. Use Live Server locally, sign in, and choose the **private history JSON** (downloaded separately) to import records. Import is idempotent for original history. Test a new meal.
-5. After verifying Supabase works, remove `meals.json`, `.github/workflows/add-meal.yml`, and `scripts/add_meal.py` from the GitHub repository. Add `.github/workflows/deploy.yml` (Pages-only deployment). Deploy the frontend files. You may keep `schema.sql` locally rather than pushing it.
-6. Review old GitHub Issues and delete any containing meal details; public Git history may still retain old JSON. Consider history rewrite or a fresh repository if minimizing past exposure is important. History rewrite cannot retract downloaded copies.
+**[Live Website](https://defranzo.github.io/daily-fuel-tracker/)**
+
+## Features
+
+- Track daily calories, protein, and remaining calorie allowance.
+- Log, edit, and delete meals.
+- View daily summaries and weekly nutrition trends.
+- Set a personalized daily calorie target.
+- Access your private meal history across devices.
+- Responsive interface for desktop and mobile.
+
+## Tech Stack
+
+- **Frontend:** HTML, CSS, JavaScript
+- **Backend:** Supabase (Auth + PostgreSQL)
+- **Hosting:** GitHub Pages
+- **Access Control:** PostgreSQL Row Level Security (RLS)
+
+## Getting Started
+
+1. Clone the repository and open it in VS Code.
+2. Create a Supabase project and configure Authentication.
+3. Create the required database tables (`meals` and `profiles`) with user-specific RLS policies.
+4. Add your Supabase Project URL and publishable key to `supabase-config.js`.
+5. Launch locally using Live Server or deploy through GitHub Pages.
+
+> Never include Supabase secret keys or `service_role` credentials in frontend code.
 
 ## Security
-- Every query is checked by Supabase Row Level Security; no anonymous data access.
-- Supabase publishable/anon key is safe in browser; service_role is not.
-- GitHub Pages frontend remains publicly accessible; meal data requires login.
-- Do not commit private history JSON, passwords, private keys, or database service secrets.
+
+Daily Fuel uses Supabase Authentication and PostgreSQL Row Level Security to restrict access to each user's data.
+
+- Meal records and calorie targets are isolated by account.
+- Database operations require authentication and enforce ownership policies.
+- The frontend is publicly hosted, but private nutrition data requires authorized access.
+- Only the Supabase publishable key is exposed to the browser.
+
+## Deployment
+
+Push changes to the `main` branch to trigger the GitHub Actions deployment workflow.
+
+The website is hosted at:
+
+https://defranzo.github.io/daily-fuel-tracker/
+
+---
+
+Built for simple, consistent nutrition tracking.
