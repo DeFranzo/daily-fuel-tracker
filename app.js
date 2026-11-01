@@ -13,6 +13,16 @@ const formatDate = date => { const [y, m, d] = date.split("-"); return `${Number
 const shortDate = date => { const [, m, d] = date.split("-"); return `${Number(d)}/${Number(m)}`; };
 const shiftDate = (iso, days) => { const [y, m, d] = iso.split("-").map(Number); const dt = new Date(Date.UTC(y, m - 1, d + days)); return dt.toISOString().slice(0, 10); };
 
+function parseNutritionNumber(value) {
+  const normalized = String(value).trim().replace(',', '.');
+
+  if (!/^(?:\d+(?:\.\d+)?|\.\d+)$/.test(normalized)) {
+    return NaN;
+  }
+
+  return Number(normalized);
+}
+
 let meals = [];
 let days = [];
 let selectedDate = null;
@@ -135,8 +145,8 @@ $('detailsGrid').addEventListener('click', event => {
       </select></label>
     </div>
     <div class="entry-row">
-      <label>Calories (kcal)<input name="calories" type="number" min="0" max="15000" step="any" inputmode="decimal" required></label>
-      <label>Protein (g)<input name="protein" type="number" min="0" max="500" step="any" inputmode="decimal" required></label>
+      <label>Calories (kcal)<input name="calories" type="text" min="0" max="15000" step="any" inputmode="decimal" required></label>
+      <label>Protein (g)<input name="protein" type="text" min="0" max="500" step="any" inputmode="decimal" required></label>
     </div>
     <label>Meal Details<textarea name="description" rows="5" maxlength="6000" required></textarea></label>
     <div class="edit-controls">
@@ -203,7 +213,8 @@ $('detailsGrid').addEventListener('click', event => {
     if (!form.reportValidity()) return;
     const fields = form.elements;
     const text = fields.namedItem('description').value.trim().split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-    const cal = Number(fields.namedItem('calories').value), pro = Number(fields.namedItem('protein').value);
+    const cal = parseNutritionNumber(fields.namedItem('calories').value);
+    const pro = parseNutritionNumber(fields.namedItem('protein').value);
     if (!text.length || text[0].length > 350 || !Number.isFinite(cal) || cal < 0 || cal > 15000 || !Number.isFinite(pro) || pro < 0 || pro > 500) {
       feedback.textContent = 'Check the meal name, calories, protein and details.'; return;
     }
@@ -449,7 +460,9 @@ $('mealEntryForm').addEventListener('click', event => {
   const input = $(button.dataset.for);
   if (!input) return;
   const increment = Number(button.dataset.adjust);
-  const value = input.value.trim() === '' ? 0 : Number(input.value);
+  const value = input.value.trim() === ''
+    ? 0
+    : parseNutritionNumber(input.value);
   if (!Number.isFinite(value) || !Number.isFinite(increment)) return;
   const minimum = Number(input.min || 0);
   const maximum = Number(input.max || Number.POSITIVE_INFINITY);
@@ -463,7 +476,8 @@ $('mealEntryForm').addEventListener('submit', async event => {
   event.preventDefault();
   if (!currentUser) return;
   const date = $('entryDate').value, meal = $('entryType').value;
-  const calories = Number($('entryCalories').value), protein = Number($('entryProtein').value);
+  const calories = parseNutritionNumber($('entryCalories').value);
+  const protein = parseNutritionNumber($('entryProtein').value);
   const lines = $('entryDescription').value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !lines.length || !Number.isFinite(calories) || calories < 0 || calories > 15000 || !Number.isFinite(protein) || protein < 0 || protein > 500) {
     alert('Check date, calories, protein and meal details.'); return;
