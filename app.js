@@ -5,7 +5,10 @@ let DAILY_LIMIT = 1800;
 const REFRESH_MS = 60_000;
 let supabaseClient;
 let currentUser = null;
-const ORDER = { Morning: 1, Breakfast: 2, "Breakfast & Lunch": 3, Lunch: 4, Afternoon: 5, Snack: 6, Dinner: 7 };
+const MEAL_TYPES = ["Breakfast", "Lunch", "Dinner", "Snack"];
+const ORDER = Object.fromEntries(
+  MEAL_TYPES.map((type, index) => [type, index + 1])
+);
 const $ = id => document.getElementById(id);
 const fmt = n => Number(n).toLocaleString("en-US", { maximumFractionDigits: 1 });
 const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -141,7 +144,7 @@ $('detailsGrid').addEventListener('click', event => {
 </label>
 
       <label>Meal Type<select name="meal" required>
-        ${Object.keys(ORDER).map(type => `<option value="${escapeHTML(type)}">${escapeHTML(type)}</option>`).join('')}
+        ${MEAL_TYPES.map(type => `<option value="${escapeHTML(type)}">${escapeHTML(type)}</option>`).join('')}
       </select></label>
     </div>
     <div class="entry-row">
@@ -174,6 +177,18 @@ $('detailsGrid').addEventListener('click', event => {
   editDateInput.addEventListener('change', updateEditDateDisplay);
 
   updateEditDateDisplay();
+
+  const mealSelect = form.elements.namedItem('meal');
+
+  if (!MEAL_TYPES.includes(entry.meal)) {
+    const legacyOption = new Option(
+      `${entry.meal} (legacy)`,
+      entry.meal,
+      true,
+      true
+    );
+    mealSelect.add(legacyOption);
+  }
 
   form.elements.namedItem('meal').value = entry.meal;
   form.elements.namedItem('calories').value = entry.calories;
